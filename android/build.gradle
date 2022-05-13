@@ -1,0 +1,66 @@
+group 'com.suprsend.suprsend_flutter_sdk'
+version '1.0-SNAPSHOT'
+
+buildscript {
+    ext.kotlin_version = '1.6.10'
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "com.android.tools.build:gradle:7.0.4"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+rootProject.allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url "https://jitpack.io" }
+    }
+}
+
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+/**
+ * To update the library's version code & version name, change these
+ * */
+def pluginVersionCode = 1
+def pluginVersionName = "0.1Beta1"
+
+android {
+    compileSdkVersion 31
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+
+    defaultConfig {
+
+        versionCode pluginVersionCode
+        versionName pluginVersionName
+
+        minSdkVersion 19
+
+        buildConfigField "int", "SS_SDK_VERSION_CODE", "${pluginVersionCode}"
+        buildConfigField "String", "SS_SDK_VERSION_NAME", "\"${pluginVersionName}\""
+
+    }
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    api "com.github.suprsend:suprsend-kmm-sdk:0.1Beta9"
+}
