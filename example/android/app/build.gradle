@@ -1,0 +1,82 @@
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader('UTF-8') { reader ->
+        localProperties.load(reader)
+    }
+}
+
+def flutterRoot = localProperties.getProperty('flutter.sdk')
+if (flutterRoot == null) {
+    throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
+}
+
+def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
+if (flutterVersionCode == null) {
+    flutterVersionCode = '1'
+}
+
+def flutterVersionName = localProperties.getProperty('flutter.versionName')
+if (flutterVersionName == null) {
+    flutterVersionName = '1.0'
+}
+
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
+
+android {
+    compileSdkVersion flutter.compileSdkVersion
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+
+    defaultConfig {
+        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
+        applicationId "com.suprsend.suprsend_flutter_sdk_example"
+        minSdkVersion 19
+        targetSdkVersion flutter.targetSdkVersion
+        versionCode flutterVersionCode.toInteger()
+        versionName flutterVersionName
+
+        buildConfigField "String", "SS_API_KEY", localProperties['SS_API_KEY']
+        buildConfigField "String", "SS_API_SECRET", localProperties['SS_API_SECRET']
+
+        buildConfigField "String", "XIAOMI_APP_ID", localProperties['XIAOMI_APP_ID']
+        buildConfigField "String", "XIAOMI_API_KEY", localProperties['XIAOMI_API_KEY']
+    }
+
+    buildTypes {
+        debug {
+            debuggable true
+            buildConfigField "String", "SS_API_BASE_URL", localProperties['SS_API_BASE_URL_STAGING']
+            signingConfig signingConfigs.debug
+        }
+        release {
+            debuggable false
+            buildConfigField "String", "SS_API_BASE_URL", localProperties['SS_API_BASE_URL_PROD']
+
+            // TODO: Add your own signing config for the release build.
+            // Signing with the debug keys for now, so `flutter run --release` works.
+            signingConfig signingConfigs.debug
+        }
+    }
+}
+
+flutter {
+    source '../..'
+}
+
+dependencies {
+    implementation project(":suprsend_flutter_sdk")
+}
