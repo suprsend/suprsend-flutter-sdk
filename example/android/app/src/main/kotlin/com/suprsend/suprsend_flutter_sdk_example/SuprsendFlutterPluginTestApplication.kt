@@ -8,11 +8,11 @@ class SuprsendFlutterPluginTestApplication: Application() {
 
   companion object {
     const val TAG = "ClientSuprsend$VERSION_NAME"
-    lateinit var application: SuprsendFlutterPluginTestApplication
+    lateinit var app: SuprsendFlutterPluginTestApplication
   }
 
   override fun onCreate() {
-    application = this
+    app = this
     SSApi.init(this, SS_API_KEY, SS_API_SECRET, SS_API_BASE_URL)
     SSApi.initXiaomi(this, XIAOMI_APP_ID, XIAOMI_API_KEY)
     super.onCreate()
