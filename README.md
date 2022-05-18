@@ -73,4 +73,4 @@ Go back to the flutter folder and follow below steps:
 ```
 import 'package:suprsend_flutter_sdk/suprsend.dart';
 ```
-You are all set to use the flutter SDK now for sending push notifications. For details on setting user properties and triggering workflows, please refer to [Suprsend Documentation]("https://docs.suprsend.com/docs/getting-started")
+You are all set to use the flutter SDK now for sending push notifications. For details on setting user properties and triggering workflows, please refer to [Suprsend Documentation](https://docs.suprsend.com/docs/getting-started)
