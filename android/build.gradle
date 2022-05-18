@@ -33,7 +33,6 @@ apply plugin: 'kotlin-android'
 
 
 android {
-    compileSdkVersion 31
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -53,7 +52,8 @@ android {
         versionCode pluginVersionCode
         versionName pluginVersionName
 
-        targetSdkVersion flutter
+        targetSdkVersion 32
+        compileSdkVersion 32
         minSdkVersion 19
 
         buildConfigField "int", "SS_SDK_VERSION_CODE", "${pluginVersionCode}"

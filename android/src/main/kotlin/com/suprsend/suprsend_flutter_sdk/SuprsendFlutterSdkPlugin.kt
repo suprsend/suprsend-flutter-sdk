@@ -47,7 +47,7 @@ class SuprsendFlutterSdkPlugin : FlutterPlugin, MethodCallHandler {
 
   companion object {
     const val NAME = "SuprsendFlutterSdk"
-    val TAG by lazy { "SUPRSEND_v${BuildConfig.SS_SDK_VERSION_NAME}" }
+    val TAG by lazy { "SUPRSEND_FLUTTER_v${BuildConfig.SS_SDK_VERSION_NAME}" }
 
     private var loggedIn: Boolean = false
     fun isLoggedIn() = loggedIn
@@ -67,6 +67,14 @@ class SuprsendFlutterSdkPlugin : FlutterPlugin, MethodCallHandler {
 
     suprsendInstance = SSApi.getInstance()
     suprsendInstance.setLogLevel(LogLevel.VERBOSE)
+    val properties = JSONObject()
+    properties.apply {
+      put("flutter_sdk_version_code", "${BuildConfig.SS_SDK_VERSION_CODE}")
+      put("flutter_sdk_version_name", BuildConfig.SS_SDK_VERSION_NAME)
+      put("sdk_type", "Flutter SDK")
+      put("os_version", "Android ${Build.VERSION.RELEASE}")
+    }
+    suprsendInstance.setSuperProperties(properties)
 
     channel = MethodChannel(flutterPluginBinding.binaryMessenger, "suprsend_flutter_sdk")
     channel.setMethodCallHandler(this)
