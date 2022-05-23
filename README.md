@@ -21,7 +21,7 @@ Add following line of code inside dependencies in `pubspec.yaml` file
 dependencies:
   flutter:
   	sdk: flutter
-  suprsend_flutter_sdk: "^0.0.1"
+  suprsend_flutter_sdk: "^0.0.2"
 ```
 **Step 2. Add following dependency in app build.gradle file**
 ```
