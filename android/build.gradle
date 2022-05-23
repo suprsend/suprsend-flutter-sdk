@@ -1,14 +1,14 @@
 /**
  * To update the library's version code & version name, change these
  * */
-def pluginVersionCode = 1
-def pluginVersionName = "0.0.1"
+def pluginVersionCode = 2
+def pluginVersionName = "0.0.2"
 
 group 'com.suprsend.suprsend_flutter_sdk'
 version pluginVersionName
 
 buildscript {
-    ext.kotlin_version = '1.6.10'
+    ext.kotlin_version = '1.6.21'
     repositories {
         google()
         mavenCentral()
@@ -64,5 +64,5 @@ android {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    api "com.github.suprsend:suprsend-kmm-sdk:0.1Beta9"
+    api "com.suprsend:flutter:0.1.3"
 }
