@@ -45,6 +45,7 @@ android {
         applicationId "com.suprsend.suprsend_flutter_sdk_example"
         minSdkVersion 19
         targetSdkVersion 32
+        compileSdkVersion 32
 
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
@@ -80,6 +81,4 @@ flutter {
 dependencies {
     // // Add this for Android Push notification support
     //implementation "com.google.firebase:firebase-messaging:23.0.2"
-
-    implementation project(":suprsend_flutter_sdk")
 }
