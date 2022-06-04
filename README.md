@@ -39,8 +39,8 @@ class MainApplication : Application(){
   
   override fun onCreate() {
   
-  	 // Important! without this, SDK will not work
- 	 SSApi.init(this, workspace_key, workspace_secret)
+  	// Important! without this, SDK will not work
+ 	SSApi.init(this, workspace_key, workspace_secret)
     
   	// Optional. Add this if you want to support Xiaomi notifications framework
   	SSApi.initXiaomi(this, xiaomi_app_id, xiaomi_api_key)
