@@ -18,7 +18,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  suprsend_flutter_sdk: ^0.0.1
+  suprsend_flutter_sdk: ^0.0.2
     # When depending on this package from a real application you should use:
     #   suprsend_flutter_sdk: ^x.y.z
     # See https://dart.dev/tools/pub/dependencies#version-constraints
