@@ -86,7 +86,7 @@ class _MyAppState extends State<MyApp> {
     suprsend.setLogLevel(LogLevels.VERBOSE);
 
     var hashMap = HashMap<String, Object>();
-    hashMap["flutter_runtime_version"] = Platform.version;
+    hashMap["flutter_runtime_version"] = Platform.version.replaceAll("\"", "'");
     suprsend.setSuperProperties(hashMap);
 
     var countsMap = HashMap<String, int>();
