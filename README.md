@@ -64,5 +64,5 @@ In case you face compilation errors or warnings, please perform the following tr
     - Ensure your minimum SDK version is 19 or above
     - Perform gradle sync after adding the suprsend sdk
 
-You are all set to use the flutter SDK now for sending push notifications. For details on setting user properties and triggering workflows, please refer to [Suprsend Documentation]("https://docs.suprsend.com/docs/getting-started")
+You are all set to use the flutter SDK now for sending push notifications. For details on setting user properties and triggering workflows, please refer to [Suprsend Documentation](https://docs.suprsend.com/docs/getting-started)
 
