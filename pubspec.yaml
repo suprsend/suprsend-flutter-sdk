@@ -31,6 +31,8 @@ flutter:
       android:
         package: com.suprsend.suprsend_flutter_sdk
         pluginClass: SuprsendFlutterSdkPlugin
+      ios:
+        pluginClass: SuprsendFlutterSdkPlugin
 
   # To add assets to your plugin package, add an assets section, like this:
   # assets:
