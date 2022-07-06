@@ -20,6 +20,21 @@ public class SwiftSuprsendFlutterSdkPlugin: NSObject, FlutterPlugin {
     case "track":
         handleTrack(call, result: result)
         break
+    case "setSuperProperties":
+        handleSetSuperProperties(call, result: result)
+        break
+    case "unSetSuperProperty":
+        handleUnSetSuperProperty(call, result: result)
+        break
+    case "purchaseMade":
+        handlePurchaseMade(call, result: result)
+        break
+    case "flush":
+        handleFlush(call, result: result)
+        break
+    case "setLogLevel":
+        handleSetLogLevel(call, result: result)
+        break
     default:
         result(FlutterMethodNotImplemented)
     }
@@ -43,3 +58,30 @@ private func handleTrack(_ call: FlutterMethodCall, result: @escaping FlutterRes
     let properties = arguments["properties"] as? [String: Any]
     SuprSend.shared.track(eventName: eventName, properties: properties!)
 }
+
+private func handleSetSuperProperties(_ call: FlutterMethodCall, result: @escaping FlutterResult){
+    let arguments = call.arguments as? [String: Any] ?? [String: Any]()
+    let properties = arguments["properties"] as! [String: Any]
+    SuprSend.shared.setSuperProperties(properties: properties);
+}
+
+private func handleUnSetSuperProperty(_ call: FlutterMethodCall, result: @escaping FlutterResult){
+    let arguments = call.arguments as? [String: Any] ?? [String: Any]()
+    let key = arguments["propertyName"] as! String
+    SuprSend.shared.unSetSuperProperty(key: key);
+}
+
+public func handlePurchaseMade(_ call: FlutterMethodCall, result: @escaping FlutterResult){
+    let arguments = call.arguments as? [String: Any] ?? [String: Any]()
+    let properties = arguments["properties"] as! [String: Any]
+    SuprSend.shared.purchaseMade(properties: properties);
+}
+
+public func handleFlush(_ call: FlutterMethodCall, result: @escaping FlutterResult){
+    SuprSend.shared.flush()
+}
+
+public func handleSetLogLevel(_ call: FlutterMethodCall, result: @escaping FlutterResult){
+    SuprSend.shared.enableLogging();
+}
+
