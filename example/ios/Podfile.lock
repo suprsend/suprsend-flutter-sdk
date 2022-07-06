@@ -1,0 +1,39 @@
+PODS:
+  - Flutter (1.0.0)
+  - suprsend_flutter_sdk (0.0.1):
+    - Flutter
+    - SuprsendCore (= 1.0.0)
+    - SuprSendSdk (= 1.0.0)
+  - SuprsendCore (1.0.0)
+  - SuprSendSdk (1.0.0)
+  - uni_links (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - suprsend_flutter_sdk (from `.symlinks/plugins/suprsend_flutter_sdk/ios`)
+  - uni_links (from `.symlinks/plugins/uni_links/ios`)
+
+SPEC REPOS:
+  trunk:
+    - SuprsendCore
+    - SuprSendSdk
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  suprsend_flutter_sdk:
+    :path: ".symlinks/plugins/suprsend_flutter_sdk/ios"
+  uni_links:
+    :path: ".symlinks/plugins/uni_links/ios"
+
+SPEC CHECKSUMS:
+  Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
+  suprsend_flutter_sdk: d98c938518867408a6c0cf876a60fd3ba9b65fac
+  SuprsendCore: 810cd4e9f7e829c1d694aa556774a3dd787607e8
+  SuprSendSdk: aa988cb0547c46d0d32ba25d2feb404f590cee41
+  uni_links: d97da20c7701486ba192624d99bffaaffcfc298a
+
+PODFILE CHECKSUM: cc1f88378b4bfcf93a6ce00d2c587857c6008d3b
+
+COCOAPODS: 1.11.3
