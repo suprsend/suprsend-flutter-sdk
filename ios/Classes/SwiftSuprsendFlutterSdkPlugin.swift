@@ -61,20 +61,18 @@ private func handleTrack(_ call: FlutterMethodCall, result: @escaping FlutterRes
 
 private func handleSetSuperProperties(_ call: FlutterMethodCall, result: @escaping FlutterResult){
     let arguments = call.arguments as? [String: Any] ?? [String: Any]()
-    let properties = arguments["properties"] as! [String: Any]
-    SuprSend.shared.setSuperProperties(properties: properties);
+    SuprSend.shared.setSuperProperties(properties: arguments);
 }
 
 private func handleUnSetSuperProperty(_ call: FlutterMethodCall, result: @escaping FlutterResult){
     let arguments = call.arguments as? [String: Any] ?? [String: Any]()
-    let key = arguments["propertyName"] as! String
+    let key = arguments["key"] as! String
     SuprSend.shared.unSetSuperProperty(key: key);
 }
 
 public func handlePurchaseMade(_ call: FlutterMethodCall, result: @escaping FlutterResult){
     let arguments = call.arguments as? [String: Any] ?? [String: Any]()
-    let properties = arguments["properties"] as! [String: Any]
-    SuprSend.shared.purchaseMade(properties: properties);
+    SuprSend.shared.purchaseMade(properties: arguments);
 }
 
 public func handleFlush(_ call: FlutterMethodCall, result: @escaping FlutterResult){
