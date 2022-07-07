@@ -7,6 +7,30 @@ class User {
     channel = _channel;
   }
 
+  void setEmail(String email) {
+    channel.invokeMethod("setEmail", {"email": email});
+  }
+
+  void unSetEmail(String email) {
+    channel.invokeMethod("unSetEmail", {"email": email});
+  }
+
+  void setSms(String mobile) {
+    channel.invokeMethod("setSms", {"mobile": mobile});
+  }
+
+  void unSetSms(String mobile) {
+    channel.invokeMethod("unSetSms", {"mobile": mobile});
+  }
+
+  void setWhatsApp(String mobile) {
+    channel.invokeMethod("setWhatsApp", {"mobile": mobile});
+  }
+
+  void unSetWhatsApp(String mobile) {
+    channel.invokeMethod("unSetWhatsApp", {"mobile": mobile});
+  }
+
   void set(Map<String, Object?>? properties) {
     channel.invokeMethod("set", properties);
   }
