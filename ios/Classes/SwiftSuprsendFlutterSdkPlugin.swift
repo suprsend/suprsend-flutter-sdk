@@ -35,6 +35,42 @@ public class SwiftSuprsendFlutterSdkPlugin: NSObject, FlutterPlugin {
     case "setLogLevel":
         handleSetLogLevel(call, result: result)
         break
+    case "set":
+        handleSet(call, result: result)
+        break
+    case "setOnce":
+        handleSetOnce(call, result: result)
+        break
+    case "increment":
+        handleIncrement(call, result: result)
+        break
+    case "append":
+        handleAppend(call, result: result)
+        break
+    case "remove":
+        handleRemove(call, result: result)
+        break
+    case "unSet":
+        handleUnSet(call, result: result)
+        break
+    case "setEmail":
+        handleSetEmail(call, result: result)
+        break
+    case "unSetEmail":
+        handleUnSetEmail(call, result: result)
+        break
+    case "setSms":
+        handleSetSms(call, result: result)
+        break
+    case "unSetSms":
+        handleUnSetSms(call, result: result)
+        break
+    case "setWhatsApp":
+        handleSetWhatsApp(call, result: result)
+        break
+    case "unSetWhatsApp":
+        handleUnSetWhatsApp(call, result: result)
+        break
     default:
         result(FlutterMethodNotImplemented)
     }
@@ -83,3 +119,69 @@ public func handleSetLogLevel(_ call: FlutterMethodCall, result: @escaping Flutt
     SuprSend.shared.enableLogging();
 }
 
+public func handleSet(_ call: FlutterMethodCall, result: @escaping FlutterResult){
+    let arguments = call.arguments as? [String: Any] ?? [String: Any]()
+    SuprSend.shared.set(properties: arguments);
+}
+
+public func handleSetOnce(_ call: FlutterMethodCall, result: @escaping FlutterResult){
+    let arguments = call.arguments as? [String: Any] ?? [String: Any]()
+    SuprSend.shared.setOnce(properties: arguments);
+}
+
+public func handleIncrement(_ call: FlutterMethodCall, result: @escaping FlutterResult){
+    let arguments = call.arguments as? [String: Float] ?? [String: Float]()
+    SuprSend.shared.increment(properties: arguments);
+}
+
+public func handleAppend(_ call: FlutterMethodCall, result: @escaping FlutterResult){
+    let arguments = call.arguments as? [String: Any] ?? [String: Any]()
+    SuprSend.shared.append(properties: arguments);
+}
+
+public func handleRemove(_ call: FlutterMethodCall, result: @escaping FlutterResult){
+    let arguments = call.arguments as? [String: Any] ?? [String: Any]()
+    SuprSend.shared.remove(properties: arguments);
+}
+
+public func handleUnSet(_ call: FlutterMethodCall, result: @escaping FlutterResult){
+    let arguments = call.arguments as? [String: Any] ?? [String: Any]()
+    let keys = arguments["keys"] as! [String]
+    SuprSend.shared.unSet(keys: keys);
+}
+
+public func handleSetEmail(_ call: FlutterMethodCall, result: @escaping FlutterResult){
+    let arguments = call.arguments as? [String: Any] ?? [String: Any]()
+    let email = arguments["email"] as! String
+    SuprSend.shared.setEmail(emailId: email);
+}
+
+public func handleUnSetEmail(_ call: FlutterMethodCall, result: @escaping FlutterResult){
+    let arguments = call.arguments as? [String: Any] ?? [String: Any]()
+    let email = arguments["email"] as! String
+    SuprSend.shared.unSetEmail(emailId: email);
+}
+
+public func handleSetSms(_ call: FlutterMethodCall, result: @escaping FlutterResult){
+    let arguments = call.arguments as? [String: Any] ?? [String: Any]()
+    let mobile = arguments["mobile"] as! String
+    SuprSend.shared.setSms(mobileNumber: mobile);
+}
+
+public func handleUnSetSms(_ call: FlutterMethodCall, result: @escaping FlutterResult){
+    let arguments = call.arguments as? [String: Any] ?? [String: Any]()
+    let mobile = arguments["mobile"] as! String
+    SuprSend.shared.unSetSms(mobileNumber: mobile);
+}
+
+public func handleSetWhatsApp(_ call: FlutterMethodCall, result: @escaping FlutterResult){
+    let arguments = call.arguments as? [String: Any] ?? [String: Any]()
+    let mobile = arguments["mobile"] as! String
+    SuprSend.shared.setWhatsApp(mobileNumber: mobile);
+}
+
+public func handleUnSetWhatsApp(_ call: FlutterMethodCall, result: @escaping FlutterResult){
+    let arguments = call.arguments as? [String: Any] ?? [String: Any]()
+    let mobile = arguments["mobile"] as! String
+    SuprSend.shared.unSetWhatsApp(mobileNumber: mobile);
+}
