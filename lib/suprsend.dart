@@ -26,30 +26,6 @@ class suprsend {
     _channel.invokeMethod("track", {"eventName": eventName, "properties": properties});
   }
 
-  static void setEmail(String email) {
-    _channel.invokeMethod("setEmail", {"email": email});
-  }
-
-  static void unSetEmail(String email) {
-    _channel.invokeMethod("unSetEmail", {"email": email});
-  }
-
-  static void setSms(String mobile) {
-    _channel.invokeMethod("setSms", {"mobile": mobile});
-  }
-
-  static void unSetSms(String mobile) {
-    _channel.invokeMethod("unSetSms", {"mobile": mobile});
-  }
-
-  static void setWhatsApp(String mobile) {
-    _channel.invokeMethod("setWhatsApp", {"mobile": mobile});
-  }
-
-  static void unSetWhatsApp(String mobile) {
-    _channel.invokeMethod("unSetWhatsApp", {"mobile": mobile});
-  }
-
   static void setAndroidFcmPush(String token) {
     _channel.invokeMethod("setAndroidFcmPush", {"token": token});
   }
