@@ -22,7 +22,7 @@ class suprsend {
     _channel.invokeMethod("identify", {"uniqueId": uniqueId});
   }
 
-  static void track(String eventName, Map<String, Object?>? properties) {
+  static void track(String eventName, [Map<String, Object?>? properties]) {
     _channel.invokeMethod("track", {"eventName": eventName, "properties": properties});
   }
 
