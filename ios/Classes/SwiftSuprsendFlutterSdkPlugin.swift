@@ -91,8 +91,8 @@ private func handleReset(_ call: FlutterMethodCall, result: @escaping FlutterRes
 private func handleTrack(_ call: FlutterMethodCall, result: @escaping FlutterResult){
     let arguments = call.arguments as? [String: Any] ?? [String: Any]()
     let eventName = arguments["eventName"] as! String
-    let properties = arguments["properties"] as? [String: Any]
-    SuprSend.shared.track(eventName: eventName, properties: properties!)
+    let properties = arguments["properties"] as? [String: Any] ?? [String: Any]()
+    SuprSend.shared.track(eventName: eventName, properties: properties)
 }
 
 private func handleSetSuperProperties(_ call: FlutterMethodCall, result: @escaping FlutterResult){
