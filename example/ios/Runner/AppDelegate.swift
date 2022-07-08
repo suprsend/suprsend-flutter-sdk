@@ -16,12 +16,14 @@ import SuprSendSdk
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
     
+//    get token and sent to suprsend
     override func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         let tokenParts = deviceToken.map { data in String(format: "%02.2hhx", data) }
         let  token = tokenParts.joined()
         SuprSend.shared.setPushNotificationToken(token: token)  // Send APNS Token to SuprSend
     }
     
+//    for capturing click event
     @available(iOS 10.0, *)
     override func userNotificationCenter(
         _ center: UNUserNotificationCenter,
@@ -34,17 +36,20 @@ import SuprSendSdk
         completionHandler()
     }
     
-    @available(iOS 10.0, *)
-    override func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void){
+//    for capturing delivery event
+    override func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        SuprSend.shared.application(application, didReceiveRemoteNotification: userInfo)
         
-        if notification.isSuperSendNotification() {
-            SuprSend.shared.userNotificationCenter(center, willPresent: notification)
-        }
+        completionHandler(.newData)
+    }
+    
+//    for informing apple how it should present notification
+    @available(iOS 10.0, *)
+    override func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         
         if #available(iOS 14.0, *) {
             completionHandler([.banner, .badge, .sound])
         } else {
-            // Fallback on earlier versions
             completionHandler([.alert, .badge, .sound])
         }
     }
