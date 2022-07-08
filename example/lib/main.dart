@@ -445,7 +445,7 @@ class _MyAppState extends State<MyApp> {
                                           if (!mobile.contains("+91")) {
                                             mobile = "+91" + _propertyMobileNumber;
                                           }
-                                          suprsend.setSms(mobile);
+                                          suprsend.user.setSms(mobile);
                                         } else {
                                           print("Mobile number must not be empty when calling setSMS()!");
                                         }
@@ -478,7 +478,7 @@ class _MyAppState extends State<MyApp> {
                                           if (!mobile.contains("+91")) {
                                             mobile = "+91" + _propertyMobileNumber;
                                           }
-                                          suprsend.unSetSms(mobile);
+                                          suprsend.user.unSetSms(mobile);
                                         } else {
                                           print("Mobile number must not be empty when calling unSetSMS()!");
                                         }
@@ -518,7 +518,7 @@ class _MyAppState extends State<MyApp> {
                                           if (!mobile.contains("+91")) {
                                             mobile = "+91" + _propertyMobileNumber;
                                           }
-                                          suprsend.setWhatsApp(mobile);
+                                          suprsend.user.setWhatsApp(mobile);
                                         } else {
                                           print("Mobile number must not be empty when calling setWhatsApp()!");
                                         }
@@ -551,7 +551,7 @@ class _MyAppState extends State<MyApp> {
                                           if (!mobile.contains("+91")) {
                                             mobile = "+91" + _propertyMobileNumber;
                                           }
-                                          suprsend.unSetWhatsApp(mobile);
+                                          suprsend.user.unSetWhatsApp(mobile);
                                         } else {
                                           print("Mobile number must not be empty when calling unSetWhatsApp()!");
                                         }
@@ -632,7 +632,7 @@ class _MyAppState extends State<MyApp> {
                                       log("propEmailController.text.toString() == ${propEmailController.text.toString()}");
                                       if (validationResult) {
                                         if (_propertyEmail.isNotEmpty) {
-                                          suprsend.setEmail(_propertyEmail);
+                                          suprsend.user.setEmail(_propertyEmail);
                                         } else {
                                           print("Email must not be empty when calling setEmail()!");
                                         }
@@ -661,7 +661,7 @@ class _MyAppState extends State<MyApp> {
                                       log("propEmailController.text.toString() == ${propEmailController.text.toString()}");
                                       if (validationResult) {
                                         if (_propertyEmail.isNotEmpty) {
-                                          suprsend.unSetEmail(_propertyEmail);
+                                          suprsend.user.unSetEmail(_propertyEmail);
                                         } else {
                                           print("Email must not be empty when calling unSetEmail()!");
                                         }
