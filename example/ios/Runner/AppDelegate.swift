@@ -37,10 +37,13 @@ import SuprSendSdk
     }
     
 //    for capturing delivery event
-    override func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+//     override func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+//         SuprSend.shared.application(application, didReceiveRemoteNotification: userInfo)
+//         completionHandler(.newData)
+//     }
+
+    override func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any]){
         SuprSend.shared.application(application, didReceiveRemoteNotification: userInfo)
-        
-        completionHandler(.newData)
     }
     
 //    for informing apple how it should present notification
