@@ -1,13 +1,14 @@
 import 'dart:async';
+import 'dart:io' show Platform;
 
 import 'package:flutter/services.dart';
 
 import 'user.dart';
 
 class suprsend {
-
   static const MethodChannel _channel = MethodChannel('suprsend_flutter_sdk');
   static User user = User(_channel);
+  static bool isAndroid = Platform.isAndroid;
 
   static Future<String?> get platformVersion async {
     final String? version = await _channel.invokeMethod('getPlatformVersion');
@@ -23,31 +24,32 @@ class suprsend {
   }
 
   static void track(String eventName, [Map<String, Object?>? properties]) {
-    _channel.invokeMethod("track", {"eventName": eventName, "properties": properties});
+    _channel.invokeMethod(
+        "track", {"eventName": eventName, "properties": properties});
   }
 
   static void setAndroidFcmPush(String token) {
-    _channel.invokeMethod("setAndroidFcmPush", {"token": token});
+    if (isAndroid) {
+      _channel.invokeMethod("setAndroidFcmPush", {"token": token});
+    }
   }
 
   static void unSetAndroidFcmPush(String token) {
-    _channel.invokeMethod("unSetAndroidFcmPush", {"token": token});
-  }
-
-  static void init(String apiKey, String apiSecret, [String? apiBaseUrl]) {
-    _channel.invokeMethod("init", {"apiKey": apiKey, "apiSecret": apiSecret, "apiBaseUrl": apiBaseUrl});
-  }
-
-  static void initXiaomi(String appId, String apiKey) {
-    _channel.invokeMethod("initXiaomi", {"appId": appId, "apiKey": apiKey});
+    if (isAndroid) {
+      _channel.invokeMethod("unSetAndroidFcmPush", {"token": token});
+    }
   }
 
   static void setAndroidXiaomiPush(String token) {
-    _channel.invokeMethod("setAndroidXiaomiPush", {"token": token});
+    if (isAndroid) {
+      _channel.invokeMethod("setAndroidXiaomiPush", {"token": token});
+    }
   }
 
   static void unSetAndroidXiaomiPush(String token) {
-    _channel.invokeMethod("unSetAndroidXiaomiPush", {"token": token});
+    if (isAndroid) {
+      _channel.invokeMethod("unSetAndroidXiaomiPush", {"token": token});
+    }
   }
 
   static void setSuperProperties(Map<String, Object?>? properties) {
@@ -63,7 +65,10 @@ class suprsend {
   }
 
   static void showNotification(String payload) {
-    _channel.invokeMethod("showNotification", {"notificationPayloadJson": payload});
+    if (isAndroid) {
+      _channel.invokeMethod(
+          "showNotification", {"notificationPayloadJson": payload});
+    }
   }
 
   static void flush() {

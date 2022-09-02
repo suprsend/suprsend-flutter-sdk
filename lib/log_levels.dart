@@ -5,5 +5,3 @@ mixin LogLevels {
   static const int ERROR = 104;
   static const int OFF = 105;
 }
-
-

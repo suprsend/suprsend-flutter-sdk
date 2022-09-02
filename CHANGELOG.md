@@ -1,3 +1,8 @@
+## 0.0.4
+
+* Upgraded android native sdk version to 0.1.7
+* Released iOS compatability in flutter sdk.
+
 ## 0.0.3
 
 * Refactor logic to move user level methods to the appropriate class, as properly demonstrated in the documentation
