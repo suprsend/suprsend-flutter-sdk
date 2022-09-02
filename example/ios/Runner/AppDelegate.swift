@@ -1,6 +1,6 @@
 import UIKit
 import Flutter
-import SuprSendSdk
+import SuprSendSdk // Add this
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
@@ -9,21 +9,24 @@ import SuprSendSdk
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
         GeneratedPluginRegistrant.register(with: self)
-        let suprSendConfiguration = SuprSendSDKConfiguration(withKey: "kfWdrPL1nFqs7OUihiBn", secret:"From1HA1ZiSXs3ofBHXh", baseUrl: "https://collector-staging.suprsend.workers.dev")
+        
+        //  suprsend initialization code
+        let suprSendConfiguration = SuprSendSDKConfiguration(withKey: "<your_workspace_key>", secret:"<your_workspace_secret>", baseUrl: nil)
         SuprSend.shared.configureWith(configuration: suprSendConfiguration  , launchOptions: launchOptions)
-        SuprSend.shared.enableLogging()
         SuprSend.shared.registerForPushNotifications()
+        
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
     
-//    get token and sent to suprsend
+    
+    //    suprsend code block from below for iOS push related events
+    
     override func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         let tokenParts = deviceToken.map { data in String(format: "%02.2hhx", data) }
         let  token = tokenParts.joined()
         SuprSend.shared.setPushNotificationToken(token: token)  // Send APNS Token to SuprSend
     }
     
-//    for capturing click event
     @available(iOS 10.0, *)
     override func userNotificationCenter(
         _ center: UNUserNotificationCenter,
@@ -36,17 +39,10 @@ import SuprSendSdk
         completionHandler()
     }
     
-//    for capturing delivery event
-//     override func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-//         SuprSend.shared.application(application, didReceiveRemoteNotification: userInfo)
-//         completionHandler(.newData)
-//     }
-
     override func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any]){
         SuprSend.shared.application(application, didReceiveRemoteNotification: userInfo)
     }
     
-//    for informing apple how it should present notification
     @available(iOS 10.0, *)
     override func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         

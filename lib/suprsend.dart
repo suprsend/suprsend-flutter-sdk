@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'user.dart';
 
 class suprsend {
-
   static const MethodChannel _channel = MethodChannel('suprsend_flutter_sdk');
   static User user = User(_channel);
   static bool isAndroid = Platform.isAndroid;
@@ -25,38 +24,31 @@ class suprsend {
   }
 
   static void track(String eventName, [Map<String, Object?>? properties]) {
-    _channel.invokeMethod("track", {"eventName": eventName, "properties": properties});
+    _channel.invokeMethod(
+        "track", {"eventName": eventName, "properties": properties});
   }
 
   static void setAndroidFcmPush(String token) {
-    if(isAndroid){
-    _channel.invokeMethod("setAndroidFcmPush", {"token": token});
+    if (isAndroid) {
+      _channel.invokeMethod("setAndroidFcmPush", {"token": token});
     }
   }
 
   static void unSetAndroidFcmPush(String token) {
-    if(isAndroid){
-    _channel.invokeMethod("unSetAndroidFcmPush", {"token": token});
+    if (isAndroid) {
+      _channel.invokeMethod("unSetAndroidFcmPush", {"token": token});
     }
   }
 
-  // static void init(String apiKey, String apiSecret, [String? apiBaseUrl]) {
-  //   _channel.invokeMethod("init", {"apiKey": apiKey, "apiSecret": apiSecret, "apiBaseUrl": apiBaseUrl});
-  // }
-
-  // static void initXiaomi(String appId, String apiKey) {
-  //   _channel.invokeMethod("initXiaomi", {"appId": appId, "apiKey": apiKey});
-  // }
-
   static void setAndroidXiaomiPush(String token) {
-    if(isAndroid){
-    _channel.invokeMethod("setAndroidXiaomiPush", {"token": token});
+    if (isAndroid) {
+      _channel.invokeMethod("setAndroidXiaomiPush", {"token": token});
     }
   }
 
   static void unSetAndroidXiaomiPush(String token) {
-    if(isAndroid){
-    _channel.invokeMethod("unSetAndroidXiaomiPush", {"token": token});
+    if (isAndroid) {
+      _channel.invokeMethod("unSetAndroidXiaomiPush", {"token": token});
     }
   }
 
@@ -73,8 +65,9 @@ class suprsend {
   }
 
   static void showNotification(String payload) {
-    if(isAndroid){
-    _channel.invokeMethod("showNotification", {"notificationPayloadJson": payload});
+    if (isAndroid) {
+      _channel.invokeMethod(
+          "showNotification", {"notificationPayloadJson": payload});
     }
   }
 
