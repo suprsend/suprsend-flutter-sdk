@@ -1,6 +1,6 @@
 PODS:
   - Flutter (1.0.0)
-  - suprsend_flutter_sdk (0.0.2):
+  - suprsend_flutter_sdk (0.0.4):
     - Flutter
     - SuprsendCore (= 1.0.0)
     - SuprSendSdk (= 1.0.0)
@@ -29,7 +29,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
-  suprsend_flutter_sdk: d5b10dbb3cffe40fef0eadbcd2067f105ee8d8b5
+  suprsend_flutter_sdk: e5ffb59c6afdc9fcfef58a555aa0802385091ad6
   SuprsendCore: 810cd4e9f7e829c1d694aa556774a3dd787607e8
   SuprSendSdk: aa988cb0547c46d0d32ba25d2feb404f590cee41
   uni_links: d97da20c7701486ba192624d99bffaaffcfc298a
