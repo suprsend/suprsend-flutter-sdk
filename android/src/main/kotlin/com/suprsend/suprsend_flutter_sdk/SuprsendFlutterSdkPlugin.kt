@@ -261,7 +261,9 @@ class SuprsendFlutterSdkPlugin : FlutterPlugin, MethodCallHandler {
     } else {
       null
     }
-    suprsendInstance.track(eventName, jsonData)
+    if(jsonData!=null){
+      suprsendInstance.track(eventName, jsonData)
+    }
   }
 
   private fun setEmail(call: MethodCall) {
