@@ -11,9 +11,14 @@ import SuprSendSdk // Add this
         GeneratedPluginRegistrant.register(with: self)
         
         //  suprsend initialization code
-        let suprSendConfiguration = SuprSendSDKConfiguration(withKey: "<your_workspace_key>", secret:"<your_workspace_secret>", baseUrl: nil)
+        let suprSendConfiguration = SuprSendSDKConfiguration(withKey: "<your workspace_key>", secret:"your workspace_secret")
         SuprSend.shared.configureWith(configuration: suprSendConfiguration  , launchOptions: launchOptions)
-        SuprSend.shared.registerForPushNotifications()
+        SuprSend.shared.enableLogging()
+        var options: UNAuthorizationOptions = [.badge, .alert, .sound]
+        if #available(iOS 12.0, *) {
+            options = [.badge, .alert, .sound, .provisional]
+        }
+        SuprSend.shared.registerForPushNotifications(options: options)
         
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
