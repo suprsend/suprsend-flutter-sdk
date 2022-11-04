@@ -1,4 +1,4 @@
-## 0.0.5
+## 1.0.0
 
 - Upgraded ios native sdk version to 1.0.1
 
