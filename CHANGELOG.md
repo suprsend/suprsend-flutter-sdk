@@ -1,17 +1,21 @@
+## 0.0.5
+
+- Upgraded ios native sdk version to 1.0.1
+
 ## 0.0.4
 
-* Upgraded android native sdk version to 0.1.7
-* Released iOS compatability in flutter sdk.
+- Upgraded android native sdk version to 0.1.7
+- Released iOS compatability in flutter sdk.
 
 ## 0.0.3
 
-* Refactor logic to move user level methods to the appropriate class, as properly demonstrated in the documentation
+- Refactor logic to move user level methods to the appropriate class, as properly demonstrated in the documentation
 
 ## 0.0.2
 
-* Updated internal dependencies to latest stable SDK versions.
-* Fix minor linting issue.
+- Updated internal dependencies to latest stable SDK versions.
+- Fix minor linting issue.
 
 ## 0.0.1
 
-* Initial release.
+- Initial release.
