@@ -5,10 +5,14 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
 import 'package:suprsend_flutter_sdk/suprsend.dart';
 import 'package:suprsend_flutter_sdk/log_levels.dart';
 import 'package:uni_links/uni_links.dart';
+
+import 'package:suprsend_flutter_sdk/inbox_hooks.dart';
+import 'package:hooked_bloc/hooked_bloc.dart';
 
 void main() {
   runApp(const MyApp());
@@ -76,7 +80,7 @@ class _MyAppState extends State<MyApp> {
     // Platform messages may fail, so we use a try/catch PlatformException.
     // We also handle the message potentially returning null.
     try {
-      platformVersion =  'Unknown platform version';
+      platformVersion = 'Unknown platform version';
     } on PlatformException {
       platformVersion = 'Failed to get platform version.';
     }
@@ -144,6 +148,7 @@ class _MyAppState extends State<MyApp> {
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
+                SuprSendProvider(child: MyHookCompOne()),
                 Row(children: const <Widget>[
                   Expanded(
                       flex: 10,
@@ -221,10 +226,12 @@ class _MyAppState extends State<MyApp> {
                             Expanded(
                                 flex: 10,
                                 child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 0),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 6, vertical: 0),
                                   child: OutlinedButton(
                                     child: const Padding(
-                                      padding: EdgeInsets.symmetric(vertical: 18, horizontal: 12),
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 18, horizontal: 12),
                                       child: Text(
                                         "Login with Distinct ID",
                                         textAlign: TextAlign.center,
@@ -233,7 +240,9 @@ class _MyAppState extends State<MyApp> {
                                     ),
                                     onPressed: () {
                                       log("Clicked login button");
-                                      var validationResult = _userLoginFormKey.currentState!.validate();
+                                      var validationResult = _userLoginFormKey
+                                          .currentState!
+                                          .validate();
                                       log("_propertyDistinctId == $_propertyDistinctId");
                                       log("propDistinctIdController.text.toString() == ${propDistinctIdController.text.toString()}");
                                       if (validationResult) {
@@ -243,20 +252,25 @@ class _MyAppState extends State<MyApp> {
                                             _userId = _propertyDistinctId;
                                             log("After _userId == $_userId");
                                           });
-                                          var hashMap = HashMap<String, Object>();
+                                          var hashMap =
+                                              HashMap<String, Object>();
                                           hashMap["User_ID"] = _userId;
 
-                                          var countsMap = HashMap<String, int>();
+                                          var countsMap =
+                                              HashMap<String, int>();
                                           countsMap["Login_count"] = 1;
                                           suprsend.user.increment(countsMap);
 
                                           suprsend.setSuperProperties(hashMap);
-                                          suprsend.identify(_propertyDistinctId);
+                                          suprsend
+                                              .identify(_propertyDistinctId);
                                         } else {
-                                          print("Property Distinct ID must not be empty when calling login()!");
+                                          print(
+                                              "Property Distinct ID must not be empty when calling login()!");
                                         }
                                       } else {
-                                        print("There are validation errors with your Property Key!");
+                                        print(
+                                            "There are validation errors with your Property Key!");
                                       }
                                     },
                                   ),
@@ -320,7 +334,8 @@ class _MyAppState extends State<MyApp> {
                             padding: const EdgeInsets.all(6),
                             child: OutlinedButton(
                               child: const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 18, horizontal: 12),
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 18, horizontal: 12),
                                 child: Text(
                                   "Set Property",
                                   textAlign: TextAlign.center,
@@ -328,16 +343,19 @@ class _MyAppState extends State<MyApp> {
                                 ),
                               ),
                               onPressed: () {
-                                if (_userPropertySetUnsetFormKey.currentState!.validate()) {
+                                if (_userPropertySetUnsetFormKey.currentState!
+                                    .validate()) {
                                   if (_propertyValue.isNotEmpty) {
                                     Map<String, Object> props = HashMap();
                                     props[_propertyKey] = _propertyValue;
                                     suprsend.user.set(props);
                                   } else {
-                                    print("Property Value must not be empty when calling set()!");
+                                    print(
+                                        "Property Value must not be empty when calling set()!");
                                   }
                                 } else {
-                                  print("There are validation errors with your Property Key!");
+                                  print(
+                                      "There are validation errors with your Property Key!");
                                 }
                               },
                             ),
@@ -348,20 +366,25 @@ class _MyAppState extends State<MyApp> {
                             padding: const EdgeInsets.all(6),
                             child: OutlinedButton(
                               child: const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 18, horizontal: 12),
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 18, horizontal: 12),
                                 child: Text(
                                   "Unset Property",
                                   textAlign: TextAlign.center,
                                   textScaleFactor: 1.2,
                                 ),
                               ),
-                              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.blueAccent[600])),
+                              style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(
+                                      Colors.blueAccent[600])),
                               onPressed: () {
-                                if (_userPropertySetUnsetFormKey.currentState!.validate()) {
+                                if (_userPropertySetUnsetFormKey.currentState!
+                                    .validate()) {
                                   var list = [_propertyKey];
                                   suprsend.user.unSet(list);
                                 } else {
-                                  print("There are validation errors with your Property Value!");
+                                  print(
+                                      "There are validation errors with your Property Value!");
                                 }
                               },
                             ),
@@ -400,7 +423,8 @@ class _MyAppState extends State<MyApp> {
                                 if (mobileInput.contains("+")) {
                                   limit = 14;
                                 }
-                                if (mobileInput.length > limit || mobileInput.length < 10) {
+                                if (mobileInput.length > limit ||
+                                    mobileInput.length < 10) {
                                   return 'Please enter a valid 10 digit Mobile number';
                                 }
                                 String digits = mobileInput.replaceAll("+", "");
@@ -425,10 +449,12 @@ class _MyAppState extends State<MyApp> {
                             Expanded(
                                 flex: 5,
                                 child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 0),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 6, vertical: 0),
                                   child: OutlinedButton(
                                     child: const Padding(
-                                      padding: EdgeInsets.symmetric(vertical: 18, horizontal: 12),
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 18, horizontal: 12),
                                       child: Text(
                                         "Set SMS Number",
                                         textAlign: TextAlign.center,
@@ -436,21 +462,26 @@ class _MyAppState extends State<MyApp> {
                                       ),
                                     ),
                                     onPressed: () {
-                                      var validationResult = _userMobileFormKey.currentState!.validate();
+                                      var validationResult = _userMobileFormKey
+                                          .currentState!
+                                          .validate();
                                       log("_propertyMobileNumber == $_propertyMobileNumber");
                                       log("propMobileNumberController.text.toString() == ${propMobileNumberController.text.toString()}");
                                       if (validationResult) {
                                         if (_propertyMobileNumber.isNotEmpty) {
                                           String mobile = _propertyMobileNumber;
                                           if (!mobile.contains("+91")) {
-                                            mobile = "+91" + _propertyMobileNumber;
+                                            mobile =
+                                                "+91" + _propertyMobileNumber;
                                           }
                                           suprsend.user.setSms(mobile);
                                         } else {
-                                          print("Mobile number must not be empty when calling setSMS()!");
+                                          print(
+                                              "Mobile number must not be empty when calling setSMS()!");
                                         }
                                       } else {
-                                        print("There are validation errors with your Property Mobile number!");
+                                        print(
+                                            "There are validation errors with your Property Mobile number!");
                                       }
                                     },
                                   ),
@@ -458,10 +489,12 @@ class _MyAppState extends State<MyApp> {
                             Expanded(
                                 flex: 5,
                                 child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 0),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 6, vertical: 0),
                                   child: OutlinedButton(
                                     child: const Padding(
-                                      padding: EdgeInsets.symmetric(vertical: 18, horizontal: 12),
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 18, horizontal: 12),
                                       child: Text(
                                         "Unset SMS Number",
                                         textAlign: TextAlign.center,
@@ -469,21 +502,26 @@ class _MyAppState extends State<MyApp> {
                                       ),
                                     ),
                                     onPressed: () {
-                                      var validationResult = _userMobileFormKey.currentState!.validate();
+                                      var validationResult = _userMobileFormKey
+                                          .currentState!
+                                          .validate();
                                       log("_propertyMobileNumber == $_propertyMobileNumber");
                                       log("propMobileNumberController.text.toString() == ${propMobileNumberController.text.toString()}");
                                       if (validationResult) {
                                         if (_propertyMobileNumber.isNotEmpty) {
                                           String mobile = _propertyMobileNumber;
                                           if (!mobile.contains("+91")) {
-                                            mobile = "+91" + _propertyMobileNumber;
+                                            mobile =
+                                                "+91" + _propertyMobileNumber;
                                           }
                                           suprsend.user.unSetSms(mobile);
                                         } else {
-                                          print("Mobile number must not be empty when calling unSetSMS()!");
+                                          print(
+                                              "Mobile number must not be empty when calling unSetSMS()!");
                                         }
                                       } else {
-                                        print("There are validation errors with your Property Mobile number!");
+                                        print(
+                                            "There are validation errors with your Property Mobile number!");
                                       }
                                     },
                                   ),
@@ -498,10 +536,12 @@ class _MyAppState extends State<MyApp> {
                             Expanded(
                                 flex: 5,
                                 child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 0),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 6, vertical: 0),
                                   child: OutlinedButton(
                                     child: const Padding(
-                                      padding: EdgeInsets.symmetric(vertical: 18, horizontal: 12),
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 18, horizontal: 12),
                                       child: Text(
                                         "Set Whatsapp Number",
                                         textAlign: TextAlign.center,
@@ -509,21 +549,26 @@ class _MyAppState extends State<MyApp> {
                                       ),
                                     ),
                                     onPressed: () {
-                                      var validationResult = _userMobileFormKey.currentState!.validate();
+                                      var validationResult = _userMobileFormKey
+                                          .currentState!
+                                          .validate();
                                       log("_propertyMobileNumber == $_propertyMobileNumber");
                                       log("propMobileNumberController.text.toString() == ${propMobileNumberController.text.toString()}");
                                       if (validationResult) {
                                         if (_propertyMobileNumber.isNotEmpty) {
                                           String mobile = _propertyMobileNumber;
                                           if (!mobile.contains("+91")) {
-                                            mobile = "+91" + _propertyMobileNumber;
+                                            mobile =
+                                                "+91" + _propertyMobileNumber;
                                           }
                                           suprsend.user.setWhatsApp(mobile);
                                         } else {
-                                          print("Mobile number must not be empty when calling setWhatsApp()!");
+                                          print(
+                                              "Mobile number must not be empty when calling setWhatsApp()!");
                                         }
                                       } else {
-                                        print("There are validation errors with your Property Mobile number!");
+                                        print(
+                                            "There are validation errors with your Property Mobile number!");
                                       }
                                     },
                                   ),
@@ -531,10 +576,12 @@ class _MyAppState extends State<MyApp> {
                             Expanded(
                                 flex: 5,
                                 child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 0),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 6, vertical: 0),
                                   child: OutlinedButton(
                                     child: const Padding(
-                                      padding: EdgeInsets.symmetric(vertical: 18, horizontal: 12),
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 18, horizontal: 12),
                                       child: Text(
                                         "Unset Whatsapp Number",
                                         textAlign: TextAlign.center,
@@ -542,21 +589,26 @@ class _MyAppState extends State<MyApp> {
                                       ),
                                     ),
                                     onPressed: () {
-                                      var validationResult = _userMobileFormKey.currentState!.validate();
+                                      var validationResult = _userMobileFormKey
+                                          .currentState!
+                                          .validate();
                                       log("_propertyMobileNumber == $_propertyMobileNumber");
                                       log("propMobileNumberController.text.toString() == ${propMobileNumberController.text.toString()}");
                                       if (validationResult) {
                                         if (_propertyMobileNumber.isNotEmpty) {
                                           String mobile = _propertyMobileNumber;
                                           if (!mobile.contains("+91")) {
-                                            mobile = "+91" + _propertyMobileNumber;
+                                            mobile =
+                                                "+91" + _propertyMobileNumber;
                                           }
                                           suprsend.user.unSetWhatsApp(mobile);
                                         } else {
-                                          print("Mobile number must not be empty when calling unSetWhatsApp()!");
+                                          print(
+                                              "Mobile number must not be empty when calling unSetWhatsApp()!");
                                         }
                                       } else {
-                                        print("There are validation errors with your Property Mobile number!");
+                                        print(
+                                            "There are validation errors with your Property Mobile number!");
                                       }
                                     },
                                   ),
@@ -616,10 +668,12 @@ class _MyAppState extends State<MyApp> {
                             Expanded(
                                 flex: 5,
                                 child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 0),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 6, vertical: 0),
                                   child: OutlinedButton(
                                     child: const Padding(
-                                      padding: EdgeInsets.symmetric(vertical: 18, horizontal: 12),
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 18, horizontal: 12),
                                       child: Text(
                                         "Set Email",
                                         textAlign: TextAlign.center,
@@ -627,17 +681,22 @@ class _MyAppState extends State<MyApp> {
                                       ),
                                     ),
                                     onPressed: () {
-                                      var validationResult = _userEmailFormKey.currentState!.validate();
+                                      var validationResult = _userEmailFormKey
+                                          .currentState!
+                                          .validate();
                                       log("_propertyEmail == $_propertyEmail");
                                       log("propEmailController.text.toString() == ${propEmailController.text.toString()}");
                                       if (validationResult) {
                                         if (_propertyEmail.isNotEmpty) {
-                                          suprsend.user.setEmail(_propertyEmail);
+                                          suprsend.user
+                                              .setEmail(_propertyEmail);
                                         } else {
-                                          print("Email must not be empty when calling setEmail()!");
+                                          print(
+                                              "Email must not be empty when calling setEmail()!");
                                         }
                                       } else {
-                                        print("There are validation errors with your Property Email!");
+                                        print(
+                                            "There are validation errors with your Property Email!");
                                       }
                                     },
                                   ),
@@ -645,10 +704,12 @@ class _MyAppState extends State<MyApp> {
                             Expanded(
                                 flex: 5,
                                 child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 0),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 6, vertical: 0),
                                   child: OutlinedButton(
                                     child: const Padding(
-                                      padding: EdgeInsets.symmetric(vertical: 18, horizontal: 12),
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 18, horizontal: 12),
                                       child: Text(
                                         "Unset Email",
                                         textAlign: TextAlign.center,
@@ -656,17 +717,22 @@ class _MyAppState extends State<MyApp> {
                                       ),
                                     ),
                                     onPressed: () {
-                                      var validationResult = _userEmailFormKey.currentState!.validate();
+                                      var validationResult = _userEmailFormKey
+                                          .currentState!
+                                          .validate();
                                       log("_propertyEmail == $_propertyEmail");
                                       log("propEmailController.text.toString() == ${propEmailController.text.toString()}");
                                       if (validationResult) {
                                         if (_propertyEmail.isNotEmpty) {
-                                          suprsend.user.unSetEmail(_propertyEmail);
+                                          suprsend.user
+                                              .unSetEmail(_propertyEmail);
                                         } else {
-                                          print("Email must not be empty when calling unSetEmail()!");
+                                          print(
+                                              "Email must not be empty when calling unSetEmail()!");
                                         }
                                       } else {
-                                        print("There are validation errors with your Property Email!");
+                                        print(
+                                            "There are validation errors with your Property Email!");
                                       }
                                     },
                                   ),
@@ -682,10 +748,12 @@ class _MyAppState extends State<MyApp> {
                       Expanded(
                           flex: 10,
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 0),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 6, vertical: 0),
                             child: OutlinedButton(
                               child: const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 18, horizontal: 12),
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 18, horizontal: 12),
                                 child: Text(
                                   "Clear All Inputs",
                                   textAlign: TextAlign.center,
@@ -710,10 +778,12 @@ class _MyAppState extends State<MyApp> {
                       Expanded(
                           flex: 10,
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 0),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 6, vertical: 0),
                             child: OutlinedButton(
                               child: const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 18, horizontal: 12),
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 18, horizontal: 12),
                                 child: Text(
                                   "Logout",
                                   textAlign: TextAlign.center,
@@ -751,5 +821,27 @@ class _MyAppState extends State<MyApp> {
     propEmailController.dispose();
     _linkSub.cancel();
     super.dispose();
+  }
+}
+
+class MyHookCompOne extends HookWidget {
+  @override
+  Widget build(BuildContext context) {
+    final cubit = useBloc<SuprSendCubit>();
+    final state = useCubeValue();
+
+    return Column(children: [
+      TextButton(
+          style: TextButton.styleFrom(
+            foregroundColor: Colors.red,
+            padding: const EdgeInsets.all(16.0),
+            textStyle: const TextStyle(fontSize: 20),
+          ),
+          onPressed: () {
+            cubit.editName(12);
+          },
+          child: Text("Gradient ${state["name"]}",
+              textDirection: TextDirection.ltr)),
+    ]);
   }
 }
