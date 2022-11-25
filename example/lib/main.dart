@@ -11,8 +11,9 @@ import 'package:suprsend_flutter_sdk/suprsend.dart';
 import 'package:suprsend_flutter_sdk/log_levels.dart';
 import 'package:uni_links/uni_links.dart';
 
-import 'package:suprsend_flutter_sdk/inbox_hooks.dart';
-import 'package:hooked_bloc/hooked_bloc.dart';
+import 'package:suprsend_flutter_sdk/inbox/inbox_hooks.dart';
+import "package:hooked_bloc/hooked_bloc.dart";
+import "package:suprsend_flutter_sdk/inbox/store.dart";
 
 void main() {
   runApp(const MyApp());
@@ -148,7 +149,13 @@ class _MyAppState extends State<MyApp> {
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
-                SuprSendProvider(child: MyHookCompOne()),
+                SuprSendProvider(
+                  workspaceKey: "sdfsdf",
+                  workspaceSecret: "sdfsdf",
+                  distinctId: "someone@suprsend.com",
+                  subscriberId: "something",
+                  child: MyHookCompOne(),
+                ),
                 Row(children: const <Widget>[
                   Expanded(
                       flex: 10,
@@ -827,9 +834,9 @@ class _MyAppState extends State<MyApp> {
 class MyHookCompOne extends HookWidget {
   @override
   Widget build(BuildContext context) {
-    final cubit = useBloc<SuprSendCubit>();
+    final cubit = useBloc<SuprSendConfigCubit>();
     final state = useCubeValue();
-
+    print("state is $state");
     return Column(children: [
       TextButton(
           style: TextButton.styleFrom(
@@ -838,9 +845,9 @@ class MyHookCompOne extends HookWidget {
             textStyle: const TextStyle(fontSize: 20),
           ),
           onPressed: () {
-            cubit.editName(12);
+            cubit.editConfig({"workspaceKey": "testing"});
           },
-          child: Text("Gradient ${state["name"]}",
+          child: Text("Gradient ${state["workspaceKey"]}",
               textDirection: TextDirection.ltr)),
     ]);
   }
