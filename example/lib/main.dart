@@ -11,7 +11,7 @@ import 'package:suprsend_flutter_sdk/suprsend.dart';
 import 'package:suprsend_flutter_sdk/log_levels.dart';
 import 'package:uni_links/uni_links.dart';
 
-import 'package:suprsend_flutter_sdk/inbox/inbox_hooks.dart';
+import 'package:suprsend_flutter_sdk/inbox/main.dart';
 
 void main() {
   runApp(const MyApp());

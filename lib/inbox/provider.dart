@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooked_bloc/hooked_bloc.dart';
 import './store.dart';
+import "./hooks.dart";
 
 class SuprSendProvider extends HookWidget {
   final Widget child;
@@ -55,10 +56,4 @@ class SuprSendWithStore extends HookWidget {
 
     return child;
   }
-}
-
-useSuprSendStore() {
-  final cubit = useBloc<SuprSendStoreCubit>();
-  final state = useBlocBuilder(cubit, buildWhen: (state) => true);
-  return state;
 }
