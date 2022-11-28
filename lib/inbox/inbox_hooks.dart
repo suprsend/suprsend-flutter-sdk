@@ -8,30 +8,57 @@ class SuprSendProvider extends HookWidget {
   final Widget child;
   final String workspaceKey;
   final String workspaceSecret;
-  final String distinctId;
-  final String subscriberId;
+  dynamic distinctId;
+  String? subscriberId;
 
-  const SuprSendProvider(
+  SuprSendProvider(
       {Key? key,
       required this.child,
       required this.workspaceKey,
       required this.workspaceSecret,
-      required this.distinctId,
-      required this.subscriberId})
+      this.distinctId,
+      this.subscriberId})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => SuprSendConfigCubit(
+      create: (_) => SuprSendStoreCubit(
           workspaceKey, workspaceSecret, distinctId, subscriberId),
-      child: child,
+      child: SuprSendWithStore(child: child),
     );
   }
 }
 
-useCubeValue() {
-  final cubit = useBloc<SuprSendConfigCubit>();
+class SuprSendWithStore extends HookWidget {
+  final Widget child;
+
+  const SuprSendWithStore({
+    Key? key,
+    required this.child,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final storeCubit = useBloc<SuprSendStoreCubit>();
+    final storeData = useSuprSendStore();
+    final notifData = storeData["notifData"];
+    final configData = storeData["config"];
+
+    useEffect(() {
+      if (configData["subscriberId"] != null &&
+          notifData["lastFetchedOn"] == null) {
+        storeCubit.fetchNotifications();
+      }
+      return storeCubit.clearPolling;
+    }, [configData["subscriberId"]]);
+
+    return child;
+  }
+}
+
+useSuprSendStore() {
+  final cubit = useBloc<SuprSendStoreCubit>();
   final state = useBlocBuilder(cubit, buildWhen: (state) => true);
   return state;
 }

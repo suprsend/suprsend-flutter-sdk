@@ -12,6 +12,7 @@ dependencies:
     sdk: flutter
   flutter_hooks: ^0.18.5+1
   hooked_bloc: ^1.2.1
+  http: ^0.13.5
   uni_links: ^0.5.1
 
 dev_dependencies:
