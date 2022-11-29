@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:suprsend_flutter_sdk/inbox/utils.dart';
 import 'dart:convert' as convert;
 import './api.dart';
 
@@ -47,14 +48,16 @@ class SuprSendStoreCubit extends Cubit<Map<String, dynamic>> {
     final notifData = state["notifData"];
     final pollingTimerId = notifData["pollingTimerId"];
     updateNotifData({"lastFetchedOn": null, "firstFetchedOn": null});
-    pollingTimerId.cancel();
+    if (pollingTimerId != null) {
+      pollingTimerId.cancel();
+    }
   }
 
   fetchNotifications() async {
     final configData = state["config"];
     final notifData = state["notifData"];
     final isFirstCall = notifData["lastFetchedOn"] == null;
-    final currentTimeStamp = DateTime.now().millisecondsSinceEpoch;
+    final currentTimeStamp = epochNow();
     final prevMonthTimeStamp =
         currentTimeStamp - configData["batchTimeInterval"];
     final currentFetchFrom = notifData["lastFetchedOn"] ?? prevMonthTimeStamp;
@@ -64,11 +67,10 @@ class SuprSendStoreCubit extends Cubit<Map<String, dynamic>> {
           .getNotifications(state["config"], currentFetchFrom, null);
       if (response.statusCode == 200) {
         final respData = convert.jsonDecode(response.body);
-        print("GOT NEW NOTIFICATIONS ${respData["unread"]}");
+        print("UNREAD NOTIFICATIONS ${respData["unread"]}");
         final newNotifications = isFirstCall
             ? [...respData["results"]]
             : [...respData["results"], ...notifData["notifications"]];
-
         updateNotifData({
           "notifications": newNotifications,
           "unSeenCount": notifData["unSeenCount"] + respData["unread"],
@@ -76,12 +78,51 @@ class SuprSendStoreCubit extends Cubit<Map<String, dynamic>> {
           "firstFetchedOn":
               isFirstCall ? prevMonthTimeStamp : notifData["firstFetchedOn"]
         });
+      } else {
+        print(
+            'SUPRSEND: api error getting latest notifications ${response.statusCode}');
       }
     } catch (e) {
-      print('SUPRSEND2: error getting latest notifications ${e.toString()}');
+      print('SUPRSEND: error getting latest notifications ${e.toString()}');
     }
     var duration = Duration(seconds: configData["pollingInterval"]);
     var timerId = Timer(duration, () => {fetchNotifications()});
     updateNotifData({"pollingTimerId": timerId});
+  }
+
+  markClicked(String id) async {
+    final notifData = state["notifData"];
+    final notifications = notifData["notifications"];
+    var clickedNotification;
+    notifications.forEach((item) {
+      if (item["n_id"] == id) {
+        clickedNotification = item;
+      }
+    });
+    if (clickedNotification != null && clickedNotification["seen_on"] == null) {
+      try {
+        ApiClient().markNotificationClicked(state["config"], id);
+        clickedNotification["seen_on"] = epochNow();
+        updateNotifData({
+          "notifications": [...notifications]
+        });
+      } catch (e) {
+        print('SUPRSEND: error marking notification clicked ${e.toString()}');
+      }
+    }
+  }
+
+  markAllSeen() async {
+    try {
+      final res = await ApiClient().markBellClicked(state["config"]);
+      if (res.statusCode == 200) {
+        updateNotifData({"unSeenCount": 0});
+      } else {
+        print(
+            "SUPRSEND: api error marking all notifications seen ${res.statusCode}");
+      }
+    } catch (e) {
+      print("SUPRSEND: error marking all notifications seen ${e.toString()}");
+    }
   }
 }
