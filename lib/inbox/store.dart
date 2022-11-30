@@ -30,6 +30,8 @@ class SuprSendStoreCubit extends Cubit<Map<String, dynamic>> {
           }
         });
 
+  List latestNotifications = [];
+
   void updateConfig(Map<String, dynamic> newData) {
     emit({
       ...state,
@@ -78,6 +80,10 @@ class SuprSendStoreCubit extends Cubit<Map<String, dynamic>> {
           "firstFetchedOn":
               isFirstCall ? prevMonthTimeStamp : notifData["firstFetchedOn"]
         });
+
+        if (isFirstCall == false && respData["results"].length > 0) {
+          latestNotifications = [...respData["results"]];
+        }
       } else {
         print(
             'SUPRSEND: api error getting latest notifications ${response.statusCode}');

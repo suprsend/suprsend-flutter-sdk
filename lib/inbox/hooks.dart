@@ -22,3 +22,13 @@ useNotifications() {
     "markClicked": cubit.markClicked,
   };
 }
+
+useNewNotificationListener(callback) {
+  final cubit = useBloc<SuprSendStoreCubit>();
+  useBlocListener(cubit, (_, value, context) {
+    callback(cubit.latestNotifications);
+    cubit.latestNotifications = [];
+  }, listenWhen: (state) {
+    return cubit.latestNotifications.isNotEmpty;
+  });
+}
