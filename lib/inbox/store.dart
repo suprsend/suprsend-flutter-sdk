@@ -15,8 +15,8 @@ class SuprSendStoreCubit extends Cubit<Map<String, dynamic>> {
             "workspaceSecret": workspaceSecret,
             "distinctId": distinctId,
             "subscriberId": subscriberId,
-            "collectorApiUrl": 'collector-staging.suprsend.workers.dev',
-            "apiUrl": 'collector-staging.suprsend.workers.dev',
+            "collectorApiUrl": 'https://collector-staging.suprsend.workers.dev',
+            "apiUrl": 'https://collector-staging.suprsend.workers.dev/inbox',
             "pollingInterval": 20,
             "batchSize": 20,
             "batchTimeInterval": 30 * 24 * 60 * 60 * 1000
