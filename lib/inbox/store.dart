@@ -19,7 +19,8 @@ class SuprSendStoreCubit extends Cubit<Map<String, dynamic>> {
             "apiUrl": 'https://collector-staging.suprsend.workers.dev/inbox',
             "pollingInterval": 20,
             "batchSize": 20,
-            "batchTimeInterval": 30 * 24 * 60 * 60 * 1000
+            "batchTimeInterval": 30 * 24 * 60 * 60 * 1000,
+            "storage_key": "_suprsend_inbox_storage"
           },
           "notifData": {
             "notifications": [],
@@ -81,9 +82,17 @@ class SuprSendStoreCubit extends Cubit<Map<String, dynamic>> {
               isFirstCall ? prevMonthTimeStamp : notifData["firstFetchedOn"]
         });
 
+        // for emitting new notification event
         if (isFirstCall == false && respData["results"].length > 0) {
           latestNotifications = [...respData["results"]];
         }
+
+        // store in local storage
+        final storageData = {
+          "notifications": [...newNotifications.take(configData["batchSize"])],
+          "subscriberId": configData["subscriberId"]
+        };
+        setClientNotificationStorage(configData["storage_key"], storageData);
       } else {
         print(
             'SUPRSEND: api error getting latest notifications ${response.statusCode}');
@@ -98,6 +107,7 @@ class SuprSendStoreCubit extends Cubit<Map<String, dynamic>> {
 
   markClicked(String id) async {
     final notifData = state["notifData"];
+    final configData = state["config"];
     final notifications = notifData["notifications"];
     var clickedNotification;
     notifications.forEach((item) {
@@ -112,6 +122,13 @@ class SuprSendStoreCubit extends Cubit<Map<String, dynamic>> {
         updateNotifData({
           "notifications": [...notifications]
         });
+
+        // store in local storage
+        final storageData = {
+          "notifications": [...notifications.take(configData["batchSize"])],
+          "subscriberId": configData["subscriberId"]
+        };
+        setClientNotificationStorage(configData["storage_key"], storageData);
       } catch (e) {
         print('SUPRSEND: error marking notification clicked ${e.toString()}');
       }
