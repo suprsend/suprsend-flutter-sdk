@@ -12,9 +12,11 @@ import 'package:suprsend_flutter_sdk/log_levels.dart';
 import 'package:uni_links/uni_links.dart';
 
 import 'package:suprsend_flutter_sdk/inbox/main.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:suprsend_flutter_sdk/inbox/store.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const MaterialApp(home: MyApp()));
 }
 
 class MyApp extends StatefulWidget {
@@ -27,6 +29,10 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   String _platformVersion = 'Unknown';
   String _userId = "";
+  String? _subsId;
+  String? _distId;
+  // String _subsId = "Db0gychr8BMEh-F9wik46oLI20q56-shW8l6FGg08zg";
+  // String _distId = "siva_testing";
 
   var _propertyKey = "";
   var _propertyValue = "";
@@ -135,682 +141,687 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Suprsend Client App: $_platformVersion'),
-        ),
-        body: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Form(
-            key: _userPropertySetUnsetFormKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                SuprSendProvider(
-                  workspaceKey: "kfWdrPL1nFqs7OUihiBn",
-                  workspaceSecret: "From1HA1ZiSXs3ofBHXh",
-                  distinctId: "siva_testing",
-                  subscriberId: "Db0gychr8BMEh-F9wik46oLI20q56-shW8l6FGg08zg",
-                  child: MyHookCompOne(),
-                ),
-                Row(children: const <Widget>[
-                  Expanded(
-                      flex: 10,
-                      child: Center(
-                        heightFactor: 1.5,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Suprsend Client App: $_platformVersion'),
+      ),
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Form(
+          key: _userPropertySetUnsetFormKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              Row(children: const <Widget>[
+                Expanded(
+                    flex: 10,
+                    child: Center(
+                      heightFactor: 1.5,
+                      child: Text(
+                        "",
+                        textAlign: TextAlign.center,
+                      ),
+                    )),
+              ]),
+              Row(children: const <Widget>[
+                Expanded(
+                    flex: 10,
+                    child: Center(
+                      heightFactor: 2.5,
+                      child: Text(
+                        "Testing SS Flutter Plugin",
+                        textAlign: TextAlign.center,
+                        textScaleFactor: 1.6,
+                      ),
+                    )),
+              ]),
+              Row(children: <Widget>[
+                Expanded(
+                    flex: 10,
+                    child: Center(
+                      heightFactor: 2.5,
+                      child: Text(
+                        "Distinct ID: $_userId",
+                        textAlign: TextAlign.center,
+                        textScaleFactor: 1,
+                      ),
+                    )),
+              ]),
+              Row(children: const <Widget>[
+                Expanded(
+                    flex: 10,
+                    child: Padding(
+                        padding: EdgeInsets.fromLTRB(14, 6, 12, 0),
                         child: Text(
-                          "",
-                          textAlign: TextAlign.center,
-                        ),
-                      )),
-                ]),
-                Row(children: const <Widget>[
-                  Expanded(
-                      flex: 10,
-                      child: Center(
-                        heightFactor: 2.5,
-                        child: Text(
-                          "Testing SS Flutter Plugin",
-                          textAlign: TextAlign.center,
-                          textScaleFactor: 1.6,
-                        ),
-                      )),
-                ]),
-                Row(children: <Widget>[
-                  Expanded(
-                      flex: 10,
-                      child: Center(
-                        heightFactor: 2.5,
-                        child: Text(
-                          "Distinct ID: $_userId",
-                          textAlign: TextAlign.center,
-                          textScaleFactor: 1,
-                        ),
-                      )),
-                ]),
-                Row(children: const <Widget>[
-                  Expanded(
-                      flex: 10,
-                      child: Padding(
-                          padding: EdgeInsets.fromLTRB(14, 6, 12, 0),
-                          child: Text(
-                            "User Login form",
-                            textAlign: TextAlign.start,
-                            textScaleFactor: 1.2,
-                          ))),
-                ]),
-                Form(
-                    key: _userLoginFormKey,
-                    child: Column(mainAxisSize: MainAxisSize.max, children: [
-                      Row(children: <Widget>[
-                        Expanded(
-                          flex: 10,
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(12, 12, 6, 6),
-                            child: TextFormField(
-                              controller: propDistinctIdController,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter Distinct ID';
-                                }
-                                return null;
-                              },
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
-                                hintText: 'Distinct ID',
-                              ),
+                          "User Login form",
+                          textAlign: TextAlign.start,
+                          textScaleFactor: 1.2,
+                        ))),
+              ]),
+              Form(
+                  key: _userLoginFormKey,
+                  child: Column(mainAxisSize: MainAxisSize.max, children: [
+                    Row(children: <Widget>[
+                      Expanded(
+                        flex: 10,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(12, 12, 6, 6),
+                          child: TextFormField(
+                            controller: propDistinctIdController,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter Distinct ID';
+                              }
+                              return null;
+                            },
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              hintText: 'Distinct ID',
                             ),
                           ),
                         ),
-                      ]),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(6, 6, 6, 60),
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                                flex: 10,
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 6, vertical: 0),
-                                  child: OutlinedButton(
-                                    child: const Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          vertical: 18, horizontal: 12),
-                                      child: Text(
-                                        "Login with Distinct ID",
-                                        textAlign: TextAlign.center,
-                                        textScaleFactor: 1.2,
-                                      ),
+                      ),
+                    ]),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(6, 6, 6, 60),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                              flex: 10,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 6, vertical: 0),
+                                child: OutlinedButton(
+                                  child: const Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 18, horizontal: 12),
+                                    child: Text(
+                                      "Login with Distinct ID",
+                                      textAlign: TextAlign.center,
+                                      textScaleFactor: 1.2,
                                     ),
-                                    onPressed: () {
-                                      log("Clicked login button");
-                                      var validationResult = _userLoginFormKey
-                                          .currentState!
-                                          .validate();
-                                      log("_propertyDistinctId == $_propertyDistinctId");
-                                      log("propDistinctIdController.text.toString() == ${propDistinctIdController.text.toString()}");
-                                      if (validationResult) {
-                                        if (_propertyDistinctId.isNotEmpty) {
-                                          setState(() {
-                                            log("Before _userId == $_userId");
-                                            _userId = _propertyDistinctId;
-                                            log("After _userId == $_userId");
-                                          });
-                                          var hashMap =
-                                              HashMap<String, Object>();
-                                          hashMap["User_ID"] = _userId;
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _subsId =
+                                          "Db0gychr8BMEh-F9wik46oLI20q56-shW8l6FGg08zg";
+                                      _distId = "siva_testing";
+                                    });
+                                    log("Clicked login button");
+                                    var validationResult = _userLoginFormKey
+                                        .currentState!
+                                        .validate();
+                                    log("_propertyDistinctId == $_propertyDistinctId");
+                                    log("propDistinctIdController.text.toString() == ${propDistinctIdController.text.toString()}");
+                                    if (validationResult) {
+                                      if (_propertyDistinctId.isNotEmpty) {
+                                        setState(() {
+                                          log("Before _userId == $_userId");
+                                          _userId = _propertyDistinctId;
+                                          log("After _userId == $_userId");
+                                        });
+                                        var hashMap = HashMap<String, Object>();
+                                        hashMap["User_ID"] = _userId;
 
-                                          var countsMap =
-                                              HashMap<String, int>();
-                                          countsMap["Login_count"] = 1;
-                                          suprsend.user.increment(countsMap);
+                                        var countsMap = HashMap<String, int>();
+                                        countsMap["Login_count"] = 1;
+                                        suprsend.user.increment(countsMap);
 
-                                          suprsend.setSuperProperties(hashMap);
-                                          suprsend
-                                              .identify(_propertyDistinctId);
-                                        } else {
-                                          print(
-                                              "Property Distinct ID must not be empty when calling login()!");
-                                        }
+                                        suprsend.setSuperProperties(hashMap);
+                                        suprsend.identify(_propertyDistinctId);
                                       } else {
                                         print(
-                                            "There are validation errors with your Property Key!");
+                                            "Property Distinct ID must not be empty when calling login()!");
                                       }
-                                    },
-                                  ),
-                                )),
-                          ],
-                        ),
-                      )
-                    ])),
-                Row(children: const <Widget>[
-                  Expanded(
-                      flex: 10,
-                      child: Padding(
-                          padding: EdgeInsets.fromLTRB(14, 6, 12, 0),
-                          child: Text(
-                            "User Property Set/Unset form",
-                            textAlign: TextAlign.start,
-                            textScaleFactor: 1.2,
-                          ))),
-                ]),
-                Row(children: <Widget>[
-                  Expanded(
-                    flex: 5,
+                                    } else {
+                                      print(
+                                          "There are validation errors with your Property Key!");
+                                    }
+                                  },
+                                ),
+                              )),
+                        ],
+                      ),
+                    )
+                  ])),
+              Row(children: const <Widget>[
+                Expanded(
+                    flex: 10,
                     child: Padding(
-                      padding: const EdgeInsets.fromLTRB(12, 12, 6, 6),
-                      child: TextFormField(
-                        controller: propKeyController,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter property key';
-                          }
-                          return null;
-                        },
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          hintText: 'Property key',
-                        ),
+                        padding: EdgeInsets.fromLTRB(14, 6, 12, 0),
+                        child: Text(
+                          "User Property Set/Unset form",
+                          textAlign: TextAlign.start,
+                          textScaleFactor: 1.2,
+                        ))),
+              ]),
+              Row(children: <Widget>[
+                Expanded(
+                  flex: 5,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(12, 12, 6, 6),
+                    child: TextFormField(
+                      controller: propKeyController,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter property key';
+                        }
+                        return null;
+                      },
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: 'Property key',
                       ),
                     ),
                   ),
-                  Expanded(
-                    flex: 5,
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(6, 12, 12, 6),
-                      child: TextFormField(
-                        controller: propValueController,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          hintText: 'Property value',
-                        ),
+                ),
+                Expanded(
+                  flex: 5,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(6, 12, 12, 6),
+                    child: TextFormField(
+                      controller: propValueController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: 'Property value',
                       ),
                     ),
                   ),
-                ]),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(6, 6, 6, 60),
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                          flex: 5,
-                          child: Padding(
-                            padding: const EdgeInsets.all(6),
-                            child: OutlinedButton(
-                              child: const Padding(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 18, horizontal: 12),
-                                child: Text(
-                                  "Set Property",
-                                  textAlign: TextAlign.center,
-                                  textScaleFactor: 1.2,
-                                ),
-                              ),
-                              onPressed: () {
-                                if (_userPropertySetUnsetFormKey.currentState!
-                                    .validate()) {
-                                  if (_propertyValue.isNotEmpty) {
-                                    Map<String, Object> props = HashMap();
-                                    props[_propertyKey] = _propertyValue;
-                                    suprsend.user.set(props);
-                                  } else {
-                                    print(
-                                        "Property Value must not be empty when calling set()!");
-                                  }
-                                } else {
-                                  print(
-                                      "There are validation errors with your Property Key!");
-                                }
-                              },
-                            ),
-                          )),
-                      Expanded(
-                          flex: 5,
-                          child: Padding(
-                            padding: const EdgeInsets.all(6),
-                            child: OutlinedButton(
-                              child: const Padding(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 18, horizontal: 12),
-                                child: Text(
-                                  "Unset Property",
-                                  textAlign: TextAlign.center,
-                                  textScaleFactor: 1.2,
-                                ),
-                              ),
-                              style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(
-                                      Colors.blueAccent[600])),
-                              onPressed: () {
-                                if (_userPropertySetUnsetFormKey.currentState!
-                                    .validate()) {
-                                  var list = [_propertyKey];
-                                  suprsend.user.unSet(list);
-                                } else {
-                                  print(
-                                      "There are validation errors with your Property Value!");
-                                }
-                              },
-                            ),
-                          ))
-                    ],
-                  ),
                 ),
-                Row(children: const <Widget>[
-                  Expanded(
-                      flex: 10,
-                      child: Padding(
-                          padding: EdgeInsets.fromLTRB(14, 6, 12, 0),
-                          child: Text(
-                            "Mobile Number Set/Unset form",
-                            textAlign: TextAlign.start,
-                            textScaleFactor: 1.2,
-                          ))),
-                ]),
-                Form(
-                    key: _userMobileFormKey,
-                    child: Column(mainAxisSize: MainAxisSize.max, children: [
-                      Row(children: <Widget>[
-                        Expanded(
-                          flex: 10,
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(12, 12, 6, 6),
-                            child: TextFormField(
-                              keyboardType: TextInputType.phone,
-                              controller: propMobileNumberController,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter Mobile number';
-                                }
-                                String mobileInput = value.replaceAll(" ", "");
-                                int limit = 10;
-                                if (mobileInput.contains("+")) {
-                                  limit = 14;
-                                }
-                                if (mobileInput.length > limit ||
-                                    mobileInput.length < 10) {
-                                  return 'Please enter a valid 10 digit Mobile number';
-                                }
-                                String digits = mobileInput.replaceAll("+", "");
-                                var number = double.tryParse(digits);
-                                if (number == null) {
-                                  return 'Please enter a valid 10 digit Mobile number';
-                                }
-                                return null;
-                              },
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
-                                hintText: 'Mobile number',
+              ]),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(6, 6, 6, 60),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                        flex: 5,
+                        child: Padding(
+                          padding: const EdgeInsets.all(6),
+                          child: OutlinedButton(
+                            child: const Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 18, horizontal: 12),
+                              child: Text(
+                                "Set Property",
+                                textAlign: TextAlign.center,
+                                textScaleFactor: 1.2,
                               ),
+                            ),
+                            onPressed: () {
+                              if (_userPropertySetUnsetFormKey.currentState!
+                                  .validate()) {
+                                if (_propertyValue.isNotEmpty) {
+                                  Map<String, Object> props = HashMap();
+                                  props[_propertyKey] = _propertyValue;
+                                  suprsend.user.set(props);
+                                } else {
+                                  print(
+                                      "Property Value must not be empty when calling set()!");
+                                }
+                              } else {
+                                print(
+                                    "There are validation errors with your Property Key!");
+                              }
+                            },
+                          ),
+                        )),
+                    Expanded(
+                        flex: 5,
+                        child: Padding(
+                          padding: const EdgeInsets.all(6),
+                          child: OutlinedButton(
+                            child: const Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 18, horizontal: 12),
+                              child: Text(
+                                "Unset Property",
+                                textAlign: TextAlign.center,
+                                textScaleFactor: 1.2,
+                              ),
+                            ),
+                            style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(
+                                    Colors.blueAccent[600])),
+                            onPressed: () {
+                              if (_userPropertySetUnsetFormKey.currentState!
+                                  .validate()) {
+                                var list = [_propertyKey];
+                                suprsend.user.unSet(list);
+                              } else {
+                                print(
+                                    "There are validation errors with your Property Value!");
+                              }
+                            },
+                          ),
+                        ))
+                  ],
+                ),
+              ),
+              Row(children: const <Widget>[
+                Expanded(
+                    flex: 10,
+                    child: Padding(
+                        padding: EdgeInsets.fromLTRB(14, 6, 12, 0),
+                        child: Text(
+                          "Mobile Number Set/Unset form",
+                          textAlign: TextAlign.start,
+                          textScaleFactor: 1.2,
+                        ))),
+              ]),
+              Form(
+                  key: _userMobileFormKey,
+                  child: Column(mainAxisSize: MainAxisSize.max, children: [
+                    Row(children: <Widget>[
+                      Expanded(
+                        flex: 10,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(12, 12, 6, 6),
+                          child: TextFormField(
+                            keyboardType: TextInputType.phone,
+                            controller: propMobileNumberController,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter Mobile number';
+                              }
+                              String mobileInput = value.replaceAll(" ", "");
+                              int limit = 10;
+                              if (mobileInput.contains("+")) {
+                                limit = 14;
+                              }
+                              if (mobileInput.length > limit ||
+                                  mobileInput.length < 10) {
+                                return 'Please enter a valid 10 digit Mobile number';
+                              }
+                              String digits = mobileInput.replaceAll("+", "");
+                              var number = double.tryParse(digits);
+                              if (number == null) {
+                                return 'Please enter a valid 10 digit Mobile number';
+                              }
+                              return null;
+                            },
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              hintText: 'Mobile number',
                             ),
                           ),
                         ),
-                      ]),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(6, 6, 6, 6),
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                                flex: 5,
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 6, vertical: 0),
-                                  child: OutlinedButton(
-                                    child: const Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          vertical: 18, horizontal: 12),
-                                      child: Text(
-                                        "Set SMS Number",
-                                        textAlign: TextAlign.center,
-                                        textScaleFactor: 1.2,
-                                      ),
-                                    ),
-                                    onPressed: () {
-                                      var validationResult = _userMobileFormKey
-                                          .currentState!
-                                          .validate();
-                                      log("_propertyMobileNumber == $_propertyMobileNumber");
-                                      log("propMobileNumberController.text.toString() == ${propMobileNumberController.text.toString()}");
-                                      if (validationResult) {
-                                        if (_propertyMobileNumber.isNotEmpty) {
-                                          String mobile = _propertyMobileNumber;
-                                          if (!mobile.contains("+91")) {
-                                            mobile =
-                                                "+91" + _propertyMobileNumber;
-                                          }
-                                          suprsend.user.setSms(mobile);
-                                        } else {
-                                          print(
-                                              "Mobile number must not be empty when calling setSMS()!");
-                                        }
-                                      } else {
-                                        print(
-                                            "There are validation errors with your Property Mobile number!");
-                                      }
-                                    },
-                                  ),
-                                )),
-                            Expanded(
-                                flex: 5,
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 6, vertical: 0),
-                                  child: OutlinedButton(
-                                    child: const Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          vertical: 18, horizontal: 12),
-                                      child: Text(
-                                        "Unset SMS Number",
-                                        textAlign: TextAlign.center,
-                                        textScaleFactor: 1.2,
-                                      ),
-                                    ),
-                                    onPressed: () {
-                                      var validationResult = _userMobileFormKey
-                                          .currentState!
-                                          .validate();
-                                      log("_propertyMobileNumber == $_propertyMobileNumber");
-                                      log("propMobileNumberController.text.toString() == ${propMobileNumberController.text.toString()}");
-                                      if (validationResult) {
-                                        if (_propertyMobileNumber.isNotEmpty) {
-                                          String mobile = _propertyMobileNumber;
-                                          if (!mobile.contains("+91")) {
-                                            mobile =
-                                                "+91" + _propertyMobileNumber;
-                                          }
-                                          suprsend.user.unSetSms(mobile);
-                                        } else {
-                                          print(
-                                              "Mobile number must not be empty when calling unSetSMS()!");
-                                        }
-                                      } else {
-                                        print(
-                                            "There are validation errors with your Property Mobile number!");
-                                      }
-                                    },
-                                  ),
-                                )),
-                          ],
-                        ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(6, 6, 6, 60),
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                                flex: 5,
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 6, vertical: 0),
-                                  child: OutlinedButton(
-                                    child: const Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          vertical: 18, horizontal: 12),
-                                      child: Text(
-                                        "Set Whatsapp Number",
-                                        textAlign: TextAlign.center,
-                                        textScaleFactor: 1.1,
-                                      ),
+                    ]),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(6, 6, 6, 6),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                              flex: 5,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 6, vertical: 0),
+                                child: OutlinedButton(
+                                  child: const Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 18, horizontal: 12),
+                                    child: Text(
+                                      "Set SMS Number",
+                                      textAlign: TextAlign.center,
+                                      textScaleFactor: 1.2,
                                     ),
-                                    onPressed: () {
-                                      var validationResult = _userMobileFormKey
-                                          .currentState!
-                                          .validate();
-                                      log("_propertyMobileNumber == $_propertyMobileNumber");
-                                      log("propMobileNumberController.text.toString() == ${propMobileNumberController.text.toString()}");
-                                      if (validationResult) {
-                                        if (_propertyMobileNumber.isNotEmpty) {
-                                          String mobile = _propertyMobileNumber;
-                                          if (!mobile.contains("+91")) {
-                                            mobile =
-                                                "+91" + _propertyMobileNumber;
-                                          }
-                                          suprsend.user.setWhatsApp(mobile);
-                                        } else {
-                                          print(
-                                              "Mobile number must not be empty when calling setWhatsApp()!");
+                                  ),
+                                  onPressed: () {
+                                    var validationResult = _userMobileFormKey
+                                        .currentState!
+                                        .validate();
+                                    log("_propertyMobileNumber == $_propertyMobileNumber");
+                                    log("propMobileNumberController.text.toString() == ${propMobileNumberController.text.toString()}");
+                                    if (validationResult) {
+                                      if (_propertyMobileNumber.isNotEmpty) {
+                                        String mobile = _propertyMobileNumber;
+                                        if (!mobile.contains("+91")) {
+                                          mobile =
+                                              "+91" + _propertyMobileNumber;
                                         }
+                                        suprsend.user.setSms(mobile);
                                       } else {
                                         print(
-                                            "There are validation errors with your Property Mobile number!");
+                                            "Mobile number must not be empty when calling setSMS()!");
                                       }
-                                    },
-                                  ),
-                                )),
-                            Expanded(
-                                flex: 5,
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 6, vertical: 0),
-                                  child: OutlinedButton(
-                                    child: const Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          vertical: 18, horizontal: 12),
-                                      child: Text(
-                                        "Unset Whatsapp Number",
-                                        textAlign: TextAlign.center,
-                                        textScaleFactor: 1.1,
-                                      ),
+                                    } else {
+                                      print(
+                                          "There are validation errors with your Property Mobile number!");
+                                    }
+                                  },
+                                ),
+                              )),
+                          Expanded(
+                              flex: 5,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 6, vertical: 0),
+                                child: OutlinedButton(
+                                  child: const Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 18, horizontal: 12),
+                                    child: Text(
+                                      "Unset SMS Number",
+                                      textAlign: TextAlign.center,
+                                      textScaleFactor: 1.2,
                                     ),
-                                    onPressed: () {
-                                      var validationResult = _userMobileFormKey
-                                          .currentState!
-                                          .validate();
-                                      log("_propertyMobileNumber == $_propertyMobileNumber");
-                                      log("propMobileNumberController.text.toString() == ${propMobileNumberController.text.toString()}");
-                                      if (validationResult) {
-                                        if (_propertyMobileNumber.isNotEmpty) {
-                                          String mobile = _propertyMobileNumber;
-                                          if (!mobile.contains("+91")) {
-                                            mobile =
-                                                "+91" + _propertyMobileNumber;
-                                          }
-                                          suprsend.user.unSetWhatsApp(mobile);
-                                        } else {
-                                          print(
-                                              "Mobile number must not be empty when calling unSetWhatsApp()!");
+                                  ),
+                                  onPressed: () {
+                                    var validationResult = _userMobileFormKey
+                                        .currentState!
+                                        .validate();
+                                    log("_propertyMobileNumber == $_propertyMobileNumber");
+                                    log("propMobileNumberController.text.toString() == ${propMobileNumberController.text.toString()}");
+                                    if (validationResult) {
+                                      if (_propertyMobileNumber.isNotEmpty) {
+                                        String mobile = _propertyMobileNumber;
+                                        if (!mobile.contains("+91")) {
+                                          mobile =
+                                              "+91" + _propertyMobileNumber;
                                         }
+                                        suprsend.user.unSetSms(mobile);
                                       } else {
                                         print(
-                                            "There are validation errors with your Property Mobile number!");
+                                            "Mobile number must not be empty when calling unSetSMS()!");
                                       }
-                                    },
+                                    } else {
+                                      print(
+                                          "There are validation errors with your Property Mobile number!");
+                                    }
+                                  },
+                                ),
+                              )),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(6, 6, 6, 60),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                              flex: 5,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 6, vertical: 0),
+                                child: OutlinedButton(
+                                  child: const Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 18, horizontal: 12),
+                                    child: Text(
+                                      "Set Whatsapp Number",
+                                      textAlign: TextAlign.center,
+                                      textScaleFactor: 1.1,
+                                    ),
                                   ),
-                                )),
-                          ],
-                        ),
-                      )
-                    ])),
-                Row(children: const <Widget>[
-                  Expanded(
-                      flex: 10,
-                      child: Padding(
-                          padding: EdgeInsets.fromLTRB(14, 6, 12, 0),
-                          child: Text(
-                            "Email ID Set/Unset form",
-                            textAlign: TextAlign.start,
-                            textScaleFactor: 1.2,
-                          ))),
-                ]),
-                Form(
-                    key: _userEmailFormKey,
-                    child: Column(mainAxisSize: MainAxisSize.max, children: [
-                      Row(children: <Widget>[
-                        Expanded(
-                          flex: 10,
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(12, 12, 6, 6),
-                            child: TextFormField(
-                              keyboardType: TextInputType.emailAddress,
-                              controller: propEmailController,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter email ID';
-                                }
-                                String emailInput = value.trim();
+                                  onPressed: () {
+                                    var validationResult = _userMobileFormKey
+                                        .currentState!
+                                        .validate();
+                                    log("_propertyMobileNumber == $_propertyMobileNumber");
+                                    log("propMobileNumberController.text.toString() == ${propMobileNumberController.text.toString()}");
+                                    if (validationResult) {
+                                      if (_propertyMobileNumber.isNotEmpty) {
+                                        String mobile = _propertyMobileNumber;
+                                        if (!mobile.contains("+91")) {
+                                          mobile =
+                                              "+91" + _propertyMobileNumber;
+                                        }
+                                        suprsend.user.setWhatsApp(mobile);
+                                      } else {
+                                        print(
+                                            "Mobile number must not be empty when calling setWhatsApp()!");
+                                      }
+                                    } else {
+                                      print(
+                                          "There are validation errors with your Property Mobile number!");
+                                    }
+                                  },
+                                ),
+                              )),
+                          Expanded(
+                              flex: 5,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 6, vertical: 0),
+                                child: OutlinedButton(
+                                  child: const Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 18, horizontal: 12),
+                                    child: Text(
+                                      "Unset Whatsapp Number",
+                                      textAlign: TextAlign.center,
+                                      textScaleFactor: 1.1,
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    var validationResult = _userMobileFormKey
+                                        .currentState!
+                                        .validate();
+                                    log("_propertyMobileNumber == $_propertyMobileNumber");
+                                    log("propMobileNumberController.text.toString() == ${propMobileNumberController.text.toString()}");
+                                    if (validationResult) {
+                                      if (_propertyMobileNumber.isNotEmpty) {
+                                        String mobile = _propertyMobileNumber;
+                                        if (!mobile.contains("+91")) {
+                                          mobile =
+                                              "+91" + _propertyMobileNumber;
+                                        }
+                                        suprsend.user.unSetWhatsApp(mobile);
+                                      } else {
+                                        print(
+                                            "Mobile number must not be empty when calling unSetWhatsApp()!");
+                                      }
+                                    } else {
+                                      print(
+                                          "There are validation errors with your Property Mobile number!");
+                                    }
+                                  },
+                                ),
+                              )),
+                        ],
+                      ),
+                    )
+                  ])),
+              Row(children: const <Widget>[
+                Expanded(
+                    flex: 10,
+                    child: Padding(
+                        padding: EdgeInsets.fromLTRB(14, 6, 12, 0),
+                        child: Text(
+                          "Email ID Set/Unset form",
+                          textAlign: TextAlign.start,
+                          textScaleFactor: 1.2,
+                        ))),
+              ]),
+              Form(
+                  key: _userEmailFormKey,
+                  child: Column(mainAxisSize: MainAxisSize.max, children: [
+                    Row(children: <Widget>[
+                      Expanded(
+                        flex: 10,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(12, 12, 6, 6),
+                          child: TextFormField(
+                            keyboardType: TextInputType.emailAddress,
+                            controller: propEmailController,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter email ID';
+                              }
+                              String emailInput = value.trim();
 
-                                if (!emailInput.contains("@")) {
-                                  return 'Please enter a valid email ID';
-                                }
-                                if (!emailInput.contains(".")) {
-                                  return 'Please enter a valid email ID';
-                                }
-                                return null;
-                              },
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
-                                hintText: 'Email ID',
-                              ),
+                              if (!emailInput.contains("@")) {
+                                return 'Please enter a valid email ID';
+                              }
+                              if (!emailInput.contains(".")) {
+                                return 'Please enter a valid email ID';
+                              }
+                              return null;
+                            },
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              hintText: 'Email ID',
                             ),
                           ),
                         ),
-                      ]),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(6, 6, 6, 60),
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                                flex: 5,
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 6, vertical: 0),
-                                  child: OutlinedButton(
-                                    child: const Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          vertical: 18, horizontal: 12),
-                                      child: Text(
-                                        "Set Email",
-                                        textAlign: TextAlign.center,
-                                        textScaleFactor: 1.2,
-                                      ),
-                                    ),
-                                    onPressed: () {
-                                      var validationResult = _userEmailFormKey
-                                          .currentState!
-                                          .validate();
-                                      log("_propertyEmail == $_propertyEmail");
-                                      log("propEmailController.text.toString() == ${propEmailController.text.toString()}");
-                                      if (validationResult) {
-                                        if (_propertyEmail.isNotEmpty) {
-                                          suprsend.user
-                                              .setEmail(_propertyEmail);
-                                        } else {
-                                          print(
-                                              "Email must not be empty when calling setEmail()!");
-                                        }
-                                      } else {
-                                        print(
-                                            "There are validation errors with your Property Email!");
-                                      }
-                                    },
-                                  ),
-                                )),
-                            Expanded(
-                                flex: 5,
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 6, vertical: 0),
-                                  child: OutlinedButton(
-                                    child: const Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          vertical: 18, horizontal: 12),
-                                      child: Text(
-                                        "Unset Email",
-                                        textAlign: TextAlign.center,
-                                        textScaleFactor: 1.2,
-                                      ),
-                                    ),
-                                    onPressed: () {
-                                      var validationResult = _userEmailFormKey
-                                          .currentState!
-                                          .validate();
-                                      log("_propertyEmail == $_propertyEmail");
-                                      log("propEmailController.text.toString() == ${propEmailController.text.toString()}");
-                                      if (validationResult) {
-                                        if (_propertyEmail.isNotEmpty) {
-                                          suprsend.user
-                                              .unSetEmail(_propertyEmail);
-                                        } else {
-                                          print(
-                                              "Email must not be empty when calling unSetEmail()!");
-                                        }
-                                      } else {
-                                        print(
-                                            "There are validation errors with your Property Email!");
-                                      }
-                                    },
-                                  ),
-                                )),
-                          ],
-                        ),
                       ),
-                    ])),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(6, 6, 6, 0),
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                          flex: 10,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 6, vertical: 0),
-                            child: OutlinedButton(
-                              child: const Padding(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 18, horizontal: 12),
-                                child: Text(
-                                  "Clear All Inputs",
-                                  textAlign: TextAlign.center,
-                                  textScaleFactor: 1.2,
+                    ]),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(6, 6, 6, 60),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                              flex: 5,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 6, vertical: 0),
+                                child: OutlinedButton(
+                                  child: const Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 18, horizontal: 12),
+                                    child: Text(
+                                      "Set Email",
+                                      textAlign: TextAlign.center,
+                                      textScaleFactor: 1.2,
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    var validationResult = _userEmailFormKey
+                                        .currentState!
+                                        .validate();
+                                    log("_propertyEmail == $_propertyEmail");
+                                    log("propEmailController.text.toString() == ${propEmailController.text.toString()}");
+                                    if (validationResult) {
+                                      if (_propertyEmail.isNotEmpty) {
+                                        suprsend.user.setEmail(_propertyEmail);
+                                      } else {
+                                        print(
+                                            "Email must not be empty when calling setEmail()!");
+                                      }
+                                    } else {
+                                      print(
+                                          "There are validation errors with your Property Email!");
+                                    }
+                                  },
                                 ),
-                              ),
-                              onPressed: () {
-                                propDistinctIdController.clear();
-                                propKeyController.clear();
-                                propValueController.clear();
-                                propMobileNumberController.clear();
-                              },
-                            ),
-                          )),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(6, 6, 6, 60),
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                          flex: 10,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 6, vertical: 0),
-                            child: OutlinedButton(
-                              child: const Padding(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 18, horizontal: 12),
-                                child: Text(
-                                  "Logout",
-                                  textAlign: TextAlign.center,
-                                  textScaleFactor: 1.2,
+                              )),
+                          Expanded(
+                              flex: 5,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 6, vertical: 0),
+                                child: OutlinedButton(
+                                  child: const Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 18, horizontal: 12),
+                                    child: Text(
+                                      "Unset Email",
+                                      textAlign: TextAlign.center,
+                                      textScaleFactor: 1.2,
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    var validationResult = _userEmailFormKey
+                                        .currentState!
+                                        .validate();
+                                    log("_propertyEmail == $_propertyEmail");
+                                    log("propEmailController.text.toString() == ${propEmailController.text.toString()}");
+                                    if (validationResult) {
+                                      if (_propertyEmail.isNotEmpty) {
+                                        suprsend.user
+                                            .unSetEmail(_propertyEmail);
+                                      } else {
+                                        print(
+                                            "Email must not be empty when calling unSetEmail()!");
+                                      }
+                                    } else {
+                                      print(
+                                          "There are validation errors with your Property Email!");
+                                    }
+                                  },
                                 ),
+                              )),
+                        ],
+                      ),
+                    ),
+                  ])),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(6, 6, 6, 0),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                        flex: 10,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 0),
+                          child: OutlinedButton(
+                            child: const Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 18, horizontal: 12),
+                              child: Text(
+                                "Clear All Inputs",
+                                textAlign: TextAlign.center,
+                                textScaleFactor: 1.2,
                               ),
-                              onPressed: () {
-                                setState(() {
-                                  _userId = "";
-                                });
-                                suprsend.unSetSuperProperty("Platform_Version");
-                                suprsend.unSetSuperProperty("User_ID");
-                                suprsend.flush();
-                                suprsend.reset();
-                              },
                             ),
-                          )),
-                    ],
-                  ),
+                            onPressed: () {
+                              propDistinctIdController.clear();
+                              propKeyController.clear();
+                              propValueController.clear();
+                              propMobileNumberController.clear();
+                            },
+                          ),
+                        )),
+                  ],
                 ),
-              ],
-            ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(6, 6, 6, 60),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                        flex: 10,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 0),
+                          child: OutlinedButton(
+                            child: const Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 18, horizontal: 12),
+                              child: Text(
+                                "Logout",
+                                textAlign: TextAlign.center,
+                                textScaleFactor: 1.2,
+                              ),
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _userId = "";
+                              });
+                              suprsend.unSetSuperProperty("Platform_Version");
+                              suprsend.unSetSuperProperty("User_ID");
+                              suprsend.flush();
+                              suprsend.reset();
+                            },
+                          ),
+                        )),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(6, 6, 6, 60),
+                child: Row(
+                  children: <Widget>[
+                    SuprSendProvider(
+                        workspaceKey: "kfWdrPL1nFqs7OUihiBn",
+                        workspaceSecret: "From1HA1ZiSXs3ofBHXh",
+                        distinctId: _distId,
+                        subscriberId: _subsId,
+                        child: const InboxBell())
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -829,18 +840,98 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-class MyHookCompOne extends HookWidget {
+class InboxBell extends HookWidget {
+  const InboxBell({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      TextButton(
-          style: TextButton.styleFrom(
-            foregroundColor: Colors.red,
-            padding: const EdgeInsets.all(16.0),
-            textStyle: const TextStyle(fontSize: 20),
+    final bellData = useBell();
+
+    return Expanded(
+        flex: 10,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 0),
+          child: OutlinedButton(
+            child: Text("Unread ${bellData["unSeenCount"]} notifications"),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (newcontext) =>
+                      BlocProvider<SuprSendStoreCubit>.value(
+                    value: BlocProvider.of<SuprSendStoreCubit>(context),
+                    child: const InboxNotifications(),
+                  ),
+                ),
+              );
+            },
           ),
-          onPressed: () {},
-          child: const Text("Gradient", textDirection: TextDirection.ltr)),
-    ]);
+        ));
   }
 }
+
+class InboxNotifications extends HookWidget {
+  const InboxNotifications({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final notifData = useNotifications();
+
+    // useNewNotificationListener((data) {
+    //   print("NEW DATA ${data.length}");
+    //   const snackBar = SnackBar(
+    //     content: Text('Got new notifications'),
+    //   );
+    //   ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    // });
+
+    useEffect(() {
+      notifData["markAllSeen"]();
+    }, []);
+
+    if (notifData["notifications"] != null &&
+        notifData["notifications"].length > 0) {
+      return Scaffold(
+          appBar: AppBar(
+            title: const Text('Notifications'),
+          ),
+          body: ListView.builder(
+            itemCount: notifData["notifications"].length,
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            physics: const ScrollPhysics(),
+            itemBuilder: (context, index) {
+              final notifMessage = notifData["notifications"][index];
+              return ListTile(
+                title: Text(
+                    '${notifMessage["message"]["header"]} ${notifMessage["seen_on"] != null ? '' : "*"}'),
+                subtitle: Text('${notifMessage["message"]["text"]}'),
+                onTap: () {
+                  notifData["markClicked"](notifMessage["n_id"]);
+                },
+              );
+            },
+          ));
+    } else {
+      return Scaffold(
+          appBar: AppBar(
+            title: const Text('Notifications'),
+          ),
+          body: const Text("NO DATA", textDirection: TextDirection.ltr));
+    }
+  }
+}
+
+
+// return Column(children: [
+//   TextButton(
+//       style: TextButton.styleFrom(
+//         foregroundColor: Colors.red,
+//         padding: const EdgeInsets.all(30.0),
+//         textStyle: const TextStyle(fontSize: 20),
+//       ),
+//       onPressed: () {
+//         Navigator.pop(context);
+//       },
+//       child: Text("NO DATA", textDirection: TextDirection.ltr)),
+// ]);

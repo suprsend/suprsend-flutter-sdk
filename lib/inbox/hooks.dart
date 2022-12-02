@@ -2,7 +2,7 @@ import 'package:hooked_bloc/hooked_bloc.dart';
 import './store.dart';
 
 useBell() {
-  final cubit = useBloc<SuprSendStoreCubit>();
+  final cubit = useBloc<SuprSendStoreCubit>(closeOnDispose: false);
   final state = useBlocBuilder(cubit);
 
   return {
@@ -12,7 +12,7 @@ useBell() {
 }
 
 useNotifications() {
-  final cubit = useBloc<SuprSendStoreCubit>();
+  final cubit = useBloc<SuprSendStoreCubit>(closeOnDispose: false);
   final state = useBlocBuilder(cubit);
 
   return {
@@ -24,7 +24,7 @@ useNotifications() {
 }
 
 useNewNotificationListener(callback) {
-  final cubit = useBloc<SuprSendStoreCubit>();
+  final cubit = useBloc<SuprSendStoreCubit>(closeOnDispose: false);
   useBlocListener(cubit, (_, value, context) {
     callback(cubit.latestNotifications);
     cubit.latestNotifications = [];
