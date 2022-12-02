@@ -68,7 +68,7 @@ class SuprSendWithStore extends HookWidget {
           "pollingTimerId": null
         });
       }
-      if (subscriberId != null || subscriberId != '') {
+      if (subscriberId != null && subscriberId != '') {
         storeCubit.updateConfig(
             {"distinctId": distinctId, "subscriberId": subscriberId});
         storeCubit.fetchNotifications();
