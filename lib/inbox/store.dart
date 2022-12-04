@@ -28,7 +28,8 @@ class SuprSendStoreCubit extends Cubit<Map<String, dynamic>> {
             "lastFetchedOn": null,
             "firstFetchedOn": null,
             "pollingTimerId": null
-          }
+          },
+          "rerender": true
         });
 
   List latestNotifications = [];
@@ -36,14 +37,16 @@ class SuprSendStoreCubit extends Cubit<Map<String, dynamic>> {
   void updateConfig(Map<String, dynamic> newData) {
     emit({
       ...state,
-      "config": {...state["config"], ...newData}
+      "config": {...state["config"], ...newData},
+      "rerender": false
     });
   }
 
-  void updateNotifData(Map<String, dynamic> newData) {
+  void updateNotifData(Map<String, dynamic> newData, {bool? updateRerender}) {
     emit({
       ...state,
-      "notifData": {...state["notifData"], ...newData}
+      "notifData": {...state["notifData"], ...newData},
+      "rerender": updateRerender
     });
   }
 
@@ -64,13 +67,14 @@ class SuprSendStoreCubit extends Cubit<Map<String, dynamic>> {
     final prevMonthTimeStamp =
         currentTimeStamp - configData["batchTimeInterval"];
     final currentFetchFrom = notifData["lastFetchedOn"] ?? prevMonthTimeStamp;
-
+    bool? hasNewData;
     try {
       final response = await ApiClient()
           .getNotifications(state["config"], currentFetchFrom, null);
       if (response.statusCode == 200) {
         final respData = convert.jsonDecode(response.body);
         print("UNREAD NOTIFICATIONS ${respData["unread"]}");
+        hasNewData = isFirstCall == false && respData["results"].length > 0;
         final newNotifications = isFirstCall
             ? [...respData["results"]]
             : [...respData["results"], ...notifData["notifications"]];
@@ -80,10 +84,10 @@ class SuprSendStoreCubit extends Cubit<Map<String, dynamic>> {
           "lastFetchedOn": currentTimeStamp,
           "firstFetchedOn":
               isFirstCall ? prevMonthTimeStamp : notifData["firstFetchedOn"]
-        });
+        }, updateRerender: hasNewData || isFirstCall);
 
         // for emitting new notification event
-        if (isFirstCall == false && respData["results"].length > 0) {
+        if (hasNewData) {
           latestNotifications = [...respData["results"]];
         }
 
@@ -121,7 +125,7 @@ class SuprSendStoreCubit extends Cubit<Map<String, dynamic>> {
         clickedNotification["seen_on"] = epochNow();
         updateNotifData({
           "notifications": [...notifications]
-        });
+        }, updateRerender: true);
 
         // store in local storage
         final storageData = {
@@ -139,7 +143,7 @@ class SuprSendStoreCubit extends Cubit<Map<String, dynamic>> {
     try {
       final res = await ApiClient().markBellClicked(state["config"]);
       if (res.statusCode == 200) {
-        updateNotifData({"unSeenCount": 0});
+        updateNotifData({"unSeenCount": 0}, updateRerender: true);
       } else {
         print(
             "SUPRSEND: api error marking all notifications seen ${res.statusCode}");

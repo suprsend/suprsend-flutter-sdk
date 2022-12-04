@@ -3,7 +3,13 @@ import './store.dart';
 
 useBell() {
   final cubit = useBloc<SuprSendStoreCubit>(closeOnDispose: false);
-  final state = useBlocBuilder(cubit);
+  final state = useBlocBuilder(
+    cubit,
+    buildWhen: (current) {
+      final state = current as Map;
+      return state["rerender"] == true;
+    },
+  );
 
   return {
     "unSeenCount": state["notifData"]["unSeenCount"],
@@ -13,7 +19,13 @@ useBell() {
 
 useNotifications() {
   final cubit = useBloc<SuprSendStoreCubit>(closeOnDispose: false);
-  final state = useBlocBuilder(cubit);
+  final state = useBlocBuilder(
+    cubit,
+    buildWhen: (current) {
+      final state = current as Map;
+      return state["rerender"] == true;
+    },
+  );
 
   return {
     "notifications": state["notifData"]["notifications"],

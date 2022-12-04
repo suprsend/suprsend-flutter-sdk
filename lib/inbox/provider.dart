@@ -58,7 +58,7 @@ class SuprSendWithStore extends HookWidget {
           "lastFetchedOn": null,
           "firstFetchedOn": null,
           "pollingTimerId": null
-        });
+        }, updateRerender: true);
       } else {
         storeCubit.updateNotifData({
           "notifications": [],
@@ -66,7 +66,7 @@ class SuprSendWithStore extends HookWidget {
           "lastFetchedOn": null,
           "firstFetchedOn": null,
           "pollingTimerId": null
-        });
+        }, updateRerender: true);
       }
       if (subscriberId != null && subscriberId != '') {
         storeCubit.updateConfig(
