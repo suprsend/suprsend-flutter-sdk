@@ -30,9 +30,6 @@ class _MyAppState extends State<MyApp> {
   String _platformVersion = 'Unknown';
   String _userId = "";
   String? _subsId;
-  String? _distId;
-  // String _subsId = "Db0gychr8BMEh-F9wik46oLI20q56-shW8l6FGg08zg";
-  // String _distId = "siva_testing";
 
   var _propertyKey = "";
   var _propertyValue = "";
@@ -241,12 +238,7 @@ class _MyAppState extends State<MyApp> {
                                       textScaleFactor: 1.2,
                                     ),
                                   ),
-                                  onPressed: () {
-                                    setState(() {
-                                      _subsId =
-                                          "Db0gychr8BMEh-F9wik46oLI20q56-shW8l6FGg08zg";
-                                      _distId = "siva_testing";
-                                    });
+                                  onPressed: () async {
                                     log("Clicked login button");
                                     var validationResult = _userLoginFormKey
                                         .currentState!
@@ -259,6 +251,15 @@ class _MyAppState extends State<MyApp> {
                                           log("Before _userId == $_userId");
                                           _userId = _propertyDistinctId;
                                           log("After _userId == $_userId");
+                                          if (_propertyDistinctId ==
+                                              "karthick@suprsend.com") {
+                                            _subsId =
+                                                "kRWJiP__P6Z7m1nu1HqANZnQ3URQBXdFdu2BIipp6c0";
+                                          } else if (_propertyDistinctId ==
+                                              "katta.sivaram@suprsend.com") {
+                                            _subsId =
+                                                "zcBZpqtxN5W5fAyaJ1QXEnzmLvDThfBLvqg8B7sOt0Y";
+                                          }
                                         });
                                         var hashMap = HashMap<String, Object>();
                                         hashMap["User_ID"] = _userId;
@@ -347,7 +348,7 @@ class _MyAppState extends State<MyApp> {
                                 textScaleFactor: 1.2,
                               ),
                             ),
-                            onPressed: () {
+                            onPressed: () async {
                               if (_userPropertySetUnsetFormKey.currentState!
                                   .validate()) {
                                 if (_propertyValue.isNotEmpty) {
@@ -797,6 +798,7 @@ class _MyAppState extends State<MyApp> {
                             onPressed: () {
                               setState(() {
                                 _userId = "";
+                                _subsId = "";
                               });
                               suprsend.unSetSuperProperty("Platform_Version");
                               suprsend.unSetSuperProperty("User_ID");
@@ -815,7 +817,7 @@ class _MyAppState extends State<MyApp> {
                     SuprSendProvider(
                         workspaceKey: "kfWdrPL1nFqs7OUihiBn",
                         workspaceSecret: "From1HA1ZiSXs3ofBHXh",
-                        distinctId: _distId,
+                        distinctId: _userId,
                         subscriberId: _subsId,
                         child: const InboxBell())
                   ],
@@ -846,7 +848,7 @@ class InboxBell extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final bellData = useBell();
-
+    print("rerendered bell");
     return Expanded(
         flex: 10,
         child: Padding(
