@@ -8,15 +8,9 @@ environment:
   flutter: ">=2.5.0"
 
 dependencies:
-  crypto: ^3.0.2
   flutter:
     sdk: flutter
-  flutter_hooks: ^0.18.5+1
-  hooked_bloc: ^1.2.1
-  http: ^0.13.5
-  shared_preferences: ^2.0.15
   uni_links: ^0.5.1
-  uuid: ^3.0.7
 
 dev_dependencies:
   flutter_test:
