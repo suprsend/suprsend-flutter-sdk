@@ -19,7 +19,8 @@ dependencies:
     sdk: flutter
 
   suprsend_flutter_inbox:
-    path: /Users/work/suprsend/suprsend_flutter_inbox
+    ^0.0.1
+    # path: /Users/work/suprsend/suprsend_flutter_inbox
 
   suprsend_flutter_sdk:
     # ^1.0.0
