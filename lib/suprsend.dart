@@ -72,7 +72,7 @@ class suprsend {
     }
   }
 
-  static Future<PermissionStatus>? showNotificationPermission() {
+  static Future<PermissionStatus>? askNotificationPermission() {
     if (isAndroid) {
       return Permission.notification.request();
     }
