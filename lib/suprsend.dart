@@ -83,7 +83,7 @@ class suprsend {
     _channel.invokeMethod("flush");
   }
 
-  static void reset() {
-    _channel.invokeMethod("reset");
+  static void reset({bool? unSubscribePush = true}) {
+    _channel.invokeMethod("reset", {"unSubscribePush": unSubscribePush});
   }
 }
