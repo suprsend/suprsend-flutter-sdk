@@ -14,7 +14,7 @@ class SuprsendFlutterPluginTestApplication: Application() {
   override fun onCreate() {
     app = this
     SSApi.init(this, SS_API_KEY, SS_API_SECRET, SS_API_BASE_URL)
-    SSApi.initXiaomi(this, XIAOMI_APP_ID, XIAOMI_API_KEY)
+   // SSApi.initXiaomi(this, XIAOMI_APP_ID, XIAOMI_API_KEY)
     super.onCreate()
   }
 

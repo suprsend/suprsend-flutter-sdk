@@ -44,8 +44,8 @@ android {
     defaultConfig {
         applicationId "com.suprsend.suprsend_flutter_sdk_example"
         minSdkVersion 19
-        targetSdkVersion 32
-        compileSdkVersion 32
+        targetSdkVersion 33
+        compileSdkVersion 33
 
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
