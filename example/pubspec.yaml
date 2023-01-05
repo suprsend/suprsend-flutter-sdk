@@ -23,7 +23,7 @@ dependencies:
     # path: /Users/work/suprsend/suprsend_flutter_inbox
 
   suprsend_flutter_sdk:
-    # ^1.0.0
+    # ^2.0.0
     # See https://dart.dev/tools/pub/dependencies#version-constraints
     # The example app is bundled with the plugin so we use a path dependency on
     # the parent directory to use the current plugin's version.
