@@ -84,6 +84,10 @@ class suprsend {
   }
 
   static void reset({bool? unSubscribePush = true}) {
-    _channel.invokeMethod("reset", {"unSubscribePush": unSubscribePush});
+    if (isAndroid) {
+      _channel.invokeMethod("reset", {"unSubscribePush": unSubscribePush});
+    } else {
+      _channel.invokeMethod("reset");
+    }
   }
 }
