@@ -82,4 +82,5 @@ flutter {
 dependencies {
     // // Add this for Android Push notification support
     implementation "com.google.firebase:firebase-messaging:23.0.2"
+    implementation fileTree(dir: "libs", include: ["*.jar","*.aar"])
 }
