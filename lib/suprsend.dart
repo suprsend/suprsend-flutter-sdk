@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io' show Platform;
 
 import 'package:flutter/services.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'user.dart';
 
@@ -71,11 +72,22 @@ class suprsend {
     }
   }
 
+  static Future<PermissionStatus>? askNotificationPermission() {
+    if (isAndroid) {
+      return Permission.notification.request();
+    }
+    return null;
+  }
+
   static void flush() {
     _channel.invokeMethod("flush");
   }
 
-  static void reset() {
-    _channel.invokeMethod("reset");
+  static void reset({bool? unSubscribePush = true}) {
+    if (isAndroid) {
+      _channel.invokeMethod("reset", {"unSubscribePush": unSubscribePush});
+    } else {
+      _channel.invokeMethod("reset");
+    }
   }
 }

@@ -110,7 +110,7 @@ class SuprsendFlutterSdkPlugin : FlutterPlugin, MethodCallHandler {
       purchaseMade           -> purchaseMade(call.arguments())
       showNotification       -> showNotification(call)
       flush                  -> flush()
-      reset                  -> reset()
+      reset                  -> reset(call)
       else                   -> result.notImplemented()
     }
   }
@@ -396,8 +396,9 @@ class SuprsendFlutterSdkPlugin : FlutterPlugin, MethodCallHandler {
     suprsendInstance.flush()
   }
 
-  private fun reset() {
-    suprsendInstance.reset()
+  private fun reset(call: MethodCall) {
+    val unSubscribeNotification = call.argument<Boolean>("unSubscribePush") ?: true
+    suprsendInstance.reset(unSubscribeNotification)
     loggedIn = false
   }
 

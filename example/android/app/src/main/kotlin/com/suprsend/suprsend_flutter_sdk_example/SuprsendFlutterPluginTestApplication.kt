@@ -17,5 +17,5 @@ class SuprsendFlutterPluginTestApplication: Application() {
     SSApi.initXiaomi(this, XIAOMI_APP_ID, XIAOMI_API_KEY)
     super.onCreate()
   }
-
+  
 }

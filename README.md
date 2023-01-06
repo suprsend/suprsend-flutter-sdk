@@ -27,7 +27,7 @@ Add following line of code inside dependencies in `pubspec.yaml` file
 dependencies:
   flutter:
   	sdk: flutter
-  suprsend_flutter_sdk: "^1.0.0"
+  suprsend_flutter_sdk: "^2.0.0"
 ```
 
 **Step 2. Run `flutter pub get` in the terminal, or click _Pub get_ button in IntelliJ or Android Studio.**

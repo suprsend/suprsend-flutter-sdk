@@ -1,3 +1,9 @@
+## 2.0.0
+
+- upgraded native android version
+- reset method now takes flag for unsubscribe push
+- android 13 changes: method is added to ask for enabling push notification permission
+
 ## 1.0.0
 
 - Upgraded ios native sdk version to 1.0.1
