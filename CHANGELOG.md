@@ -1,3 +1,7 @@
+## 2.0.1
+
+- changed sdk environmet minimum version to 2.15.0 from 2.16.0
+
 ## 2.0.0
 
 - upgraded native android version
