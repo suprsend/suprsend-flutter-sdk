@@ -397,7 +397,7 @@ class SuprsendFlutterSdkPlugin : FlutterPlugin, MethodCallHandler {
   }
 
   private fun reset(call: MethodCall) {
-    val unSubscribeNotification = call.argument<Boolean>("unSubscribePush") ?: true
+    val unSubscribeNotification = call.argument<Boolean>("unsubscribeNotification") ?: true
     suprsendInstance.reset(unSubscribeNotification)
     loggedIn = false
   }
