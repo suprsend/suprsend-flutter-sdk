@@ -85,7 +85,9 @@ private func handleIdentify(_ call: FlutterMethodCall, result: @escaping Flutter
 }
 
 private func handleReset(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-    SuprSend.shared.reset()
+    let arguments = call.arguments as? [String: Any] ?? [String: Any]()
+    let unsubscribeNotification = arguments["unsubscribeNotification"] as! Bool
+    SuprSend.shared.reset(unsubscribeNotification: unsubscribeNotification)
 }
 
 private func handleTrack(_ call: FlutterMethodCall, result: @escaping FlutterResult){
