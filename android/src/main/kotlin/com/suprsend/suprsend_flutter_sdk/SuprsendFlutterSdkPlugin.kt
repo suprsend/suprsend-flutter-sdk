@@ -140,9 +140,6 @@ class SuprsendFlutterSdkPlugin : FlutterPlugin, MethodCallHandler {
     } else {
       SSApi.init(context, apiKey, apiSecret)
     }
-    if (BuildConfig.DEBUG) {
-      toast("[DEBUG] Called init for Suprsend SDK")
-    }
   }
 
   private fun initXiaomi(call: MethodCall) {
@@ -176,9 +173,6 @@ class SuprsendFlutterSdkPlugin : FlutterPlugin, MethodCallHandler {
     if (uniqueId.isBlank()) {
       Log.e(TAG, "Unique ID cannot be blank")
       return
-    }
-    if (BuildConfig.DEBUG) {
-      toast("[DEBUG] Called identify with ID: $uniqueId")
     }
     suprsendInstance.identify(uniqueId)
     loggedIn = true
