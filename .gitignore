@@ -29,3 +29,4 @@
 build/
 
 example/android/app/google-services.json
+example/android/app/local.properties

@@ -40,16 +40,6 @@
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		9705A1C41CF9048500538489 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -66,6 +56,10 @@
 		96A844812913BF14005FD0AF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		96B7D70C2876F18E00699BB0 /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
 		96B7D70D2876F49100699BB0 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
+		96FA19892B11C3DA00F58F4E /* SuprSendSdk.xcframework.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = SuprSendSdk.xcframework.zip; path = ../../../../../Downloads/SuprSendSdk.xcframework.zip; sourceTree = "<group>"; };
+		96FA198A2B11C40300F58F4E /* SuprSendSdk.xcframework.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = SuprSendSdk.xcframework.zip; path = ../../../../../Desktop/SuprSendSdk.xcframework.zip; sourceTree = "<group>"; };
+		96FA198B2B11C40D00F58F4E /* SuprSendSdk.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = SuprSendSdk.xcframework; path = ../../../../../Desktop/SuprSendSdk.xcframework; sourceTree = "<group>"; };
+		96FA19912B11C49D00F58F4E /* SuprsendCore.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = SuprsendCore.xcframework; path = ../../../../../Desktop/SuprsendCore.xcframework; sourceTree = "<group>"; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Flutter/Debug.xcconfig; sourceTree = "<group>"; };
 		9740EEB31CF90195004384FC /* Generated.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Generated.xcconfig; path = Flutter/Generated.xcconfig; sourceTree = "<group>"; };
 		97C146EE1CF9000F007C117D /* Runner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Runner.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -99,6 +93,10 @@
 		6EAA5EDB34EA3892C4A9AECD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				96FA19912B11C49D00F58F4E /* SuprsendCore.xcframework */,
+				96FA198B2B11C40D00F58F4E /* SuprSendSdk.xcframework */,
+				96FA19892B11C3DA00F58F4E /* SuprSendSdk.xcframework.zip */,
+				96FA198A2B11C40300F58F4E /* SuprSendSdk.xcframework.zip */,
 				96B7D70D2876F49100699BB0 /* UserNotifications.framework */,
 				FC47A20AD1426B145ABE9374 /* Pods_Runner.framework */,
 			);
@@ -201,7 +199,6 @@
 				97C146EA1CF9000F007C117D /* Sources */,
 				97C146EB1CF9000F007C117D /* Frameworks */,
 				97C146EC1CF9000F007C117D /* Resources */,
-				9705A1C41CF9048500538489 /* Embed Frameworks */,
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
 				1D7C2D7F994C119CC65E2325 /* [CP] Embed Pods Frameworks */,
 				96A844892913BF14005FD0AF /* Embed App Extensions */,
