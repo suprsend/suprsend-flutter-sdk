@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'suprsend_flutter_sdk'
-  s.version          = '2.1.0'
+  s.version          = '2.1.1'
   s.summary          = 'A plugin to provide suprsend sdk functionality on the flutter applications'
   s.description      = <<-DESC
   A plugin to provide suprsend sdk functionality on the flutter applications

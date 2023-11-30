@@ -1,8 +1,8 @@
 /**
  * To update the library's version code & version name, change these
  * */
-def pluginVersionCode = 8
-def pluginVersionName = "2.1.0"
+def pluginVersionCode = 9
+def pluginVersionName = "2.1.1"
 
 group 'com.suprsend.suprsend_flutter_sdk'
 version pluginVersionName
