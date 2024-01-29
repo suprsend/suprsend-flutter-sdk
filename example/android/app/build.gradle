@@ -67,7 +67,7 @@ android {
         release {
             debuggable false
             buildConfigField "String", "SS_API_BASE_URL", localProperties['SS_API_BASE_URL_PROD']
-
+            shrinkResources false
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.debug
