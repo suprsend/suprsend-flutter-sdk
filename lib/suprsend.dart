@@ -1,6 +1,5 @@
 import 'dart:async';
-import 'dart:io' show Platform;
-
+import 'utils/platform_checker.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -9,7 +8,6 @@ import 'user.dart';
 class suprsend {
   static const MethodChannel _channel = MethodChannel('suprsend_flutter_sdk');
   static User user = User(_channel);
-  static bool isAndroid = Platform.isAndroid;
 
   static Future<String?> get platformVersion async {
     final String? version = await _channel.invokeMethod('getPlatformVersion');
@@ -17,16 +15,22 @@ class suprsend {
   }
 
   static void setLogLevel(int logLevelInt) {
-    _channel.invokeMethod("setLogLevel", {"logLevel": logLevelInt});
+    if (isMobile) {
+      _channel.invokeMethod("setLogLevel", {"logLevel": logLevelInt});
+    }
   }
 
   static void identify(String uniqueId) {
-    _channel.invokeMethod("identify", {"uniqueId": uniqueId});
+    if (isMobile) {
+      _channel.invokeMethod("identify", {"uniqueId": uniqueId});
+    }
   }
 
   static void track(String eventName, [Map<String, Object?>? properties]) {
-    _channel.invokeMethod(
-        "track", {"eventName": eventName, "properties": properties});
+    if (isMobile) {
+      _channel.invokeMethod(
+          "track", {"eventName": eventName, "properties": properties});
+    }
   }
 
   static void setAndroidFcmPush(String token) {
@@ -54,15 +58,21 @@ class suprsend {
   }
 
   static void setSuperProperties(Map<String, Object?>? properties) {
-    _channel.invokeMethod("setSuperProperties", properties);
+    if (isMobile) {
+      _channel.invokeMethod("setSuperProperties", properties);
+    }
   }
 
   static void unSetSuperProperty(String key) {
-    _channel.invokeMethod("unSetSuperProperty", {"key": key});
+    if (isMobile) {
+      _channel.invokeMethod("unSetSuperProperty", {"key": key});
+    }
   }
 
   static void purchaseMade(Map<String, Object?>? properties) {
-    _channel.invokeMethod("purchaseMade", properties);
+    if (isMobile) {
+      _channel.invokeMethod("purchaseMade", properties);
+    }
   }
 
   static void showNotification(String payload) {
@@ -80,11 +90,15 @@ class suprsend {
   }
 
   static void flush() {
-    _channel.invokeMethod("flush");
+    if (isMobile) {
+      _channel.invokeMethod("flush");
+    }
   }
 
   static void reset({bool? unSubscribePush = true}) {
-    _channel
-        .invokeMethod("reset", {"unsubscribeNotification": unSubscribePush});
+    if (isMobile) {
+      _channel
+          .invokeMethod("reset", {"unsubscribeNotification": unSubscribePush});
+    }
   }
 }
