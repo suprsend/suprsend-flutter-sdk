@@ -15,9 +15,6 @@ import SuprSendSdk // Add this
         SuprSend.shared.configureWith(configuration: suprSendConfiguration  , launchOptions: launchOptions)
         SuprSend.shared.enableLogging()
         var options: UNAuthorizationOptions = [.badge, .alert, .sound]
-        if #available(iOS 12.0, *) {
-            options = [.badge, .alert, .sound, .provisional]
-        }
         SuprSend.shared.registerForPushNotifications(options: options)
         
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)

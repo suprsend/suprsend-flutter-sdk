@@ -1,13 +1,29 @@
 import UserNotifications
 import UIKit
+import SuprSendSdk
+
+
 
 class NotificationService: UNNotificationServiceExtension {
 var contentHandler: ((UNNotificationContent) -> Void)?
 var modifiedNotificationContent: UNMutableNotificationContent?
+    
+private func track(request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
+        
+        let suprSendConfiguration = SuprSendSDKConfiguration(
+            withKey: "your workspace key",
+            secret: "your workspace secret"
+        )
+        
+        SuprSend.shared.configureWith(configuration: suprSendConfiguration , launchOptions: [:])
+        SuprSend.shared.didReceive(request, withContentHandler: contentHandler)
+    }
 
 override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
     self.contentHandler = contentHandler
     modifiedNotificationContent = (request.content.mutableCopy() as? UNMutableNotificationContent)
+    
+    track(request: request, withContentHandler: contentHandler)
     
     if let modifiedNotificationContent = modifiedNotificationContent {
         // Modify the notification content here...
