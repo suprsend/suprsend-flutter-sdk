@@ -1,3 +1,7 @@
+## 2.2.0
+
+- upgraded native iOS version to solve apns push tracking issue
+
 ## 2.1.1
 
 - updated native android version

@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'suprsend_flutter_sdk'
-  s.version          = '2.1.1'
+  s.version          = '2.2.0'
   s.summary          = 'A plugin to provide suprsend sdk functionality on the flutter applications'
   s.description      = <<-DESC
   A plugin to provide suprsend sdk functionality on the flutter applications
@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
   s.dependency "SuprsendCore", "1.0.2"
-  s.dependency "SuprSendSdk", "1.0.2"
+  s.dependency "SuprSendSdk", "1.0.3"
   s.platform = :ios
   s.ios.deployment_target = "13.0"
   # Flutter.framework does not contain a i386 slice.

@@ -4,12 +4,12 @@ PODS:
     - Flutter
   - shared_preferences_ios (0.0.1):
     - Flutter
-  - suprsend_flutter_sdk (2.1.0):
+  - suprsend_flutter_sdk (2.1.1):
     - Flutter
     - SuprsendCore (= 1.0.2)
-    - SuprSendSdk (= 1.0.2)
+    - SuprSendSdk (= 1.0.3)
   - SuprsendCore (1.0.2)
-  - SuprSendSdk (1.0.2)
+  - SuprSendSdk (1.0.3)
   - uni_links (0.0.1):
     - Flutter
 
@@ -18,6 +18,8 @@ DEPENDENCIES:
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - shared_preferences_ios (from `.symlinks/plugins/shared_preferences_ios/ios`)
   - suprsend_flutter_sdk (from `.symlinks/plugins/suprsend_flutter_sdk/ios`)
+  - SuprsendCore
+  - SuprSendSdk
   - uni_links (from `.symlinks/plugins/uni_links/ios`)
 
 SPEC REPOS:
@@ -38,14 +40,14 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/uni_links/ios"
 
 SPEC CHECKSUMS:
-  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   permission_handler_apple: 44366e37eaf29454a1e7b1b7d736c2cceaeb17ce
   shared_preferences_ios: 548a61f8053b9b8a49ac19c1ffbc8b92c50d68ad
-  suprsend_flutter_sdk: 77c42746448d5f7ce3685b99c4a7d3c4ba9d6db3
+  suprsend_flutter_sdk: 038ed3d4ef371a4206f99ba09c0fb25e3e6ba8ee
   SuprsendCore: 5aa6f17e71d805c001fdbfd54c81fbc5220b4657
-  SuprSendSdk: fc03ccf62df0902304f94444fe8a24e70a779de8
+  SuprSendSdk: 62ea59cb11cb1c214441922126dff6262cbbefcb
   uni_links: d97da20c7701486ba192624d99bffaaffcfc298a
 
-PODFILE CHECKSUM: cc1f88378b4bfcf93a6ce00d2c587857c6008d3b
+PODFILE CHECKSUM: a2b311bc8033d5f618a0e1436852a5327521826e
 
 COCOAPODS: 1.11.3
