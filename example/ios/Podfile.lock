@@ -4,12 +4,12 @@ PODS:
     - Flutter
   - shared_preferences_ios (0.0.1):
     - Flutter
-  - suprsend_flutter_sdk (2.1.1):
+  - suprsend_flutter_sdk (2.2.0):
     - Flutter
-    - SuprsendCore (= 1.0.2)
-    - SuprSendSdk (= 1.0.3)
-  - SuprsendCore (1.0.2)
-  - SuprSendSdk (1.0.3)
+    - SuprsendCore (= 1.0.5)
+    - SuprSendSdk (= 1.0.4)
+  - SuprsendCore (1.0.5)
+  - SuprSendSdk (1.0.4)
   - uni_links (0.0.1):
     - Flutter
 
@@ -43,9 +43,9 @@ SPEC CHECKSUMS:
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   permission_handler_apple: 44366e37eaf29454a1e7b1b7d736c2cceaeb17ce
   shared_preferences_ios: 548a61f8053b9b8a49ac19c1ffbc8b92c50d68ad
-  suprsend_flutter_sdk: 038ed3d4ef371a4206f99ba09c0fb25e3e6ba8ee
-  SuprsendCore: 5aa6f17e71d805c001fdbfd54c81fbc5220b4657
-  SuprSendSdk: 62ea59cb11cb1c214441922126dff6262cbbefcb
+  suprsend_flutter_sdk: af286ba92d3738d8ab91aa4a17dc55f9de29f0fc
+  SuprsendCore: 8e7179c3af299f4a9bcc06a1d2b9cea57a208522
+  SuprSendSdk: 7121a72b853117bcbe23402c87eb0b4afd70dc13
   uni_links: d97da20c7701486ba192624d99bffaaffcfc298a
 
 PODFILE CHECKSUM: a2b311bc8033d5f618a0e1436852a5327521826e

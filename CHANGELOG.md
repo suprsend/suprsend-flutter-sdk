@@ -1,3 +1,7 @@
+## 2.3.0
+
+- upgraded native ios sdk version to fix bitcode issue along with suuport to add method for deeplink custom handling
+
 ## 2.2.0
 
 - upgraded native iOS version to solve apns push tracking issue
