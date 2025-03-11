@@ -1,6 +1,10 @@
+## 2.3.1
+
+- upgraded native ios sdk version to fix bitcode issue
+
 ## 2.3.0
 
-- upgraded native ios sdk version to fix bitcode issue along with suuport to add method for deeplink custom handling
+- upgraded native ios sdk version to fix bitcode issue along with support to add method for deeplink custom handling
 
 ## 2.2.0
 

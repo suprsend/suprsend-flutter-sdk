@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'suprsend_flutter_sdk'
-  s.version          = '2.3.0'
+  s.version          = '2.3.1'
   s.summary          = 'A plugin to provide suprsend sdk functionality on the flutter applications'
   s.description      = <<-DESC
   A plugin to provide suprsend sdk functionality on the flutter applications
@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
-  s.dependency "SuprsendCore", "1.0.5"
+  s.dependency "SuprsendCore", "1.0.7"
   s.dependency "SuprSendSdk", "1.0.4"
   s.platform = :ios
   s.ios.deployment_target = "13.0"
