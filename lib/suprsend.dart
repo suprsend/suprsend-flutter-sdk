@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io' show Platform;
 
 import 'package:flutter/services.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 import 'user.dart';
 
@@ -70,13 +69,6 @@ class suprsend {
       _channel.invokeMethod(
           "showNotification", {"notificationPayloadJson": payload});
     }
-  }
-
-  static Future<PermissionStatus>? askNotificationPermission() {
-    if (isAndroid) {
-      return Permission.notification.request();
-    }
-    return null;
   }
 
   static void flush() {

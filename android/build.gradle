@@ -1,8 +1,8 @@
 /**
  * To update the library's version code & version name, change these
  * */
-def pluginVersionCode = 12
-def pluginVersionName = "2.3.1"
+def pluginVersionCode = 13
+def pluginVersionName = "2.4.0"
 
 group 'com.suprsend.suprsend_flutter_sdk'
 version pluginVersionName
@@ -33,7 +33,8 @@ apply plugin: 'kotlin-android'
 
 
 android {
-
+    namespace 'com.suprsend.suprsend_flutter_sdk'
+    
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -45,6 +46,10 @@ android {
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
+    }
+    
+     buildFeatures {
+        buildConfig true
     }
 
     defaultConfig {
