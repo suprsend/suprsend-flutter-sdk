@@ -9,7 +9,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 
 import 'package:suprsend_flutter_sdk/suprsend.dart';
 import 'package:suprsend_flutter_sdk/log_levels.dart';
-import 'package:uni_links/uni_links.dart';
+// import 'package:uni_links/uni_links.dart';
 
 import 'package:suprsend_flutter_inbox/main.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -112,28 +112,28 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> initUniLinks() async {
     // ... check initialLink
-    try {
-      final initialLink = await getInitialLink();
-      // Parse the link and warn the user, if it is not correct,
-      // but keep in mind it could be `null`.
-      if (initialLink != null) {
-        print("Initial Link received: $initialLink");
-      }
-    } on PlatformException catch (exception) {
-      // Handle exception by warning the user their action did not succeed
-      print("Initial Link error occurred: $exception");
-    }
+    // try {
+    // final initialLink = await getInitialLink();
+    // Parse the link and warn the user, if it is not correct,
+    // but keep in mind it could be `null`.
+    // if (initialLink != null) {
+    // print("Initial Link received: $initialLink");
+    // }
+    // } on PlatformException catch (exception) {
+    // Handle exception by warning the user their action did not succeed
+    // print("Initial Link error occurred: $exception");
+    // }
 
     // Attach a listener to the stream
-    _linkSub = linkStream.listen((String? link) {
-      // Parse the link and warn the user, if it is not correct
-      if (link != null) {
-        print("Link stream event received: $link");
-      }
-    }, onError: (err) {
-      // Handle exception by warning the user their action did not succeed
-      print("Link stream event error occurred: $err");
-    });
+    // _linkSub = linkStream.listen((String? link) {
+    //   // Parse the link and warn the user, if it is not correct
+    //   if (link != null) {
+    //     print("Link stream event received: $link");
+    //   }
+    // }, onError: (err) {
+    //   // Handle exception by warning the user their action did not succeed
+    //   print("Link stream event error occurred: $err");
+    // });
   }
 
   @override

@@ -1,3 +1,8 @@
+## 2.4.0
+
+- added namespace in build.gadle
+- removed askNotificationPermission method
+
 ## 2.3.1
 
 - upgraded native ios sdk version to fix bitcode issue

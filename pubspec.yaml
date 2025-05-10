@@ -1,6 +1,6 @@
 name: suprsend_flutter_sdk
 description: A plugin to provide suprsend sdk functionality on the flutter framework, (supports android platform only, for now).
-version: 2.3.1
+version: 2.4.0
 homepage: "https://www.suprsend.com/"
 
 environment:
@@ -10,8 +10,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  permission_handler: ^10.2.0
-  uni_links: ^0.5.1
 
 dev_dependencies:
   flutter_test:
