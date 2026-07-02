@@ -12,9 +12,6 @@ import android.content.Context;
 import androidx.annotation.CallSuper;
 import androidx.multidex.MultiDex;
 
-import app.suprsend.SuprSend;
-import app.suprsend.log.LogLevel;
-
 /**
  * Extension of {@link android.app.Application}, adding multidex support.
  */
@@ -24,6 +21,5 @@ public class FlutterMultiDexApplication extends Application {
   protected void attachBaseContext(Context base) {
     super.attachBaseContext(base);
     MultiDex.install(this);
-    SuprSend.Companion.getInstance().setLogLevel(LogLevel.VERBOSE);
   }
 }
