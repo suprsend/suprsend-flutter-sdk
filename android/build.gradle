@@ -20,6 +20,18 @@ allprojects {
         mavenCentral()
         // Some transitive SuprSend dependencies are hosted on JitPack.
         maven { url "https://jitpack.io" }
+        flatDir {
+            dirs "${projectDir}/libs"
+        }
+    }
+}
+
+repositories {
+    google()
+    mavenCentral()
+    maven { url "https://jitpack.io" }
+    flatDir {
+        dirs "${projectDir}/libs"
     }
 }
 
@@ -32,7 +44,7 @@ android {
     }
 
     compileSdk 34
-
+//    i have used jdk 17
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -51,14 +63,6 @@ android {
         minSdkVersion 19
     }
 
-    dependencies {
-        // Native SuprSend Android SDK (publicKey / JWT based).
-        api 'com.suprsend:native:0.1.11'
-
-        testImplementation 'org.jetbrains.kotlin:kotlin-test'
-        testImplementation 'org.mockito:mockito-core:5.0.0'
-    }
-
     testOptions {
         unitTests.all {
             useJUnitPlatform()
@@ -70,4 +74,13 @@ android {
             }
         }
     }
+}
+
+dependencies {
+    // Native SuprSend Android SDK (publicKey / JWT based).
+    api 'com.suprsend:native:0.1.14'
+//    api(name: "native-0.1.14", ext: "aar")
+
+    testImplementation 'org.jetbrains.kotlin:kotlin-test'
+    testImplementation 'org.mockito:mockito-core:5.0.0'
 }
