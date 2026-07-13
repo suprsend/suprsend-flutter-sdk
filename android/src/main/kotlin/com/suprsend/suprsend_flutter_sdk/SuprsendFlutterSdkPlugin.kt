@@ -6,6 +6,7 @@ import android.os.Looper
 import androidx.annotation.NonNull
 import app.suprsend.AppInfo
 import app.suprsend.ClientInfo
+import app.suprsend.RefreshTokenCallback
 import app.suprsend.SuprSend
 import app.suprsend.log.LogLevel
 import app.suprsend.model.ApiResponse
@@ -16,7 +17,9 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import org.json.JSONObject
+import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
 class SuprsendFlutterSdkPlugin : FlutterPlugin, MethodCallHandler {
 
@@ -25,6 +28,16 @@ class SuprsendFlutterSdkPlugin : FlutterPlugin, MethodCallHandler {
 
   private val executor = Executors.newSingleThreadExecutor()
   private val mainHandler = Handler(Looper.getMainLooper())
+
+  // Latest user token, so the native RefreshTokenCallback (which only receives
+  // the distinctId) can pass the expiring token to Dart like iOS does.
+  @Volatile
+  private var currentUserToken: String? = null
+
+  companion object {
+    // Max time to wait for the Dart refreshUserToken callback to return a token.
+    private const val REFRESH_TOKEN_TIMEOUT_SECONDS = 30L
+  }
 
   override fun onAttachedToEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
     context = binding.applicationContext
@@ -122,10 +135,17 @@ class SuprsendFlutterSdkPlugin : FlutterPlugin, MethodCallHandler {
     val ss = SuprSend.getInstance()
     val user = ss.user
     return when (call.method) {
-      "identify" -> ss.identify(
-        distinctId = call.argument<String>("distinctId") ?: "",
-        userToken = call.argument<String>("userToken"),
-      )
+      "identify" -> {
+        val userToken = call.argument<String>("userToken")
+        currentUserToken = userToken
+        val refreshCallback =
+          if (call.argument<Boolean>("hasRefreshUserToken") == true) refreshTokenCallback() else null
+        ss.identify(
+          distinctId = call.argument<String>("distinctId") ?: "",
+          userToken = userToken,
+          refreshTokenCallback = refreshCallback,
+        )
+      }
       "reset" -> {
         ss.reset(call.argument<Boolean>("unsubscribePush") ?: true)
         null
@@ -151,6 +171,44 @@ class SuprsendFlutterSdkPlugin : FlutterPlugin, MethodCallHandler {
       "setTimezone" -> user.setTimezone(call.argument<String>("value") ?: "")
       "setAndroidFcmPush" -> user.setAndroidFcmPush(call.argument<String>("token") ?: "")
       else -> null
+    }
+  }
+
+  /**
+   * Builds a native [RefreshTokenCallback] that bridges to the Dart
+   * `refreshUserToken` callback. The native SDK invokes [getToken] synchronously
+   * on a worker thread; we hop to the main thread to invoke the Flutter channel
+   * and block the worker thread until Dart returns the new token. This never
+   * runs on the platform main thread, so blocking here is safe.
+   */
+  private fun refreshTokenCallback() = object : RefreshTokenCallback {
+    override fun getToken(distinctId: String): String {
+      val latch = CountDownLatch(1)
+      val holder = arrayOfNulls<String>(1)
+      mainHandler.post {
+        channel.invokeMethod(
+          "refreshUserToken",
+          mapOf("distinctId" to distinctId, "oldUserToken" to currentUserToken),
+          object : Result {
+            override fun success(result: Any?) {
+              holder[0] = result as? String
+              latch.countDown()
+            }
+
+            override fun error(code: String, message: String?, details: Any?) {
+              latch.countDown()
+            }
+
+            override fun notImplemented() {
+              latch.countDown()
+            }
+          },
+        )
+      }
+      latch.await(REFRESH_TOKEN_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+      val newToken = holder[0]
+      if (!newToken.isNullOrBlank()) currentUserToken = newToken
+      return newToken ?: ""
     }
   }
 

@@ -42,6 +42,9 @@ dependencies:
   # Requests the runtime notification permission (Android 13+ POST_NOTIFICATIONS).
   permission_handler: ^11.3.0
 
+  # Fetches the SuprSend user token (JWT) from your backend.
+  http: ^1.2.0
+
 dev_dependencies:
   integration_test:
     sdk: flutter
