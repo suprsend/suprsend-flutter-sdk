@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key, required this.onSubmit});
 
-  final Future<void> Function(String distinctId) onSubmit;
+  final Future<void> Function(String distinctId, {bool useUserToken}) onSubmit;
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -12,6 +12,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _controller = TextEditingController();
   bool _submitting = false;
+  bool _useUserToken = false;
 
   @override
   void dispose() {
@@ -24,7 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if (id.isEmpty || _submitting) return;
     setState(() => _submitting = true);
     try {
-      await widget.onSubmit(id);
+      await widget.onSubmit(id, useUserToken: _useUserToken);
     } finally {
       if (mounted) setState(() => _submitting = false);
     }
@@ -78,6 +79,23 @@ class _LoginScreenState extends State<LoginScreen> {
                       hintText: 'e.g. user@example.com',
                       border: OutlineInputBorder(),
                       isDense: true,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  CheckboxListTile(
+                    value: _useUserToken,
+                    onChanged: _submitting
+                        ? null
+                        : (value) =>
+                            setState(() => _useUserToken = value ?? false),
+                    controlAffinity: ListTileControlAffinity.leading,
+                    contentPadding: EdgeInsets.zero,
+                    dense: true,
+                    title: const Text('Use user token'),
+                    subtitle: Text(
+                      'Enhanced security: fetch a signed token from your '
+                      'backend and refresh it automatically.',
+                      style: theme.textTheme.bodySmall,
                     ),
                   ),
                   const SizedBox(height: 20),

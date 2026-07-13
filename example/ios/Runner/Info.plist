@@ -28,6 +28,28 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<!-- Let app_links be the single deep-link handler (see DeepLinkService)
+	     instead of Flutter's built-in Router integration, which would try to
+	     parse com.suprsend://profile as a path and miss the host. -->
+	<key>FlutterDeepLinkingEnabled</key>
+	<false/>
+	<!-- OS-based deep linking: registers the com.suprsend:// custom URL scheme so
+	     iOS routes those links to this app. app_links picks them up on cold start
+	     and while running. Test in the simulator:
+	     xcrun simctl openurl booted "com.suprsend://profile" -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.suprsend.flutterexample</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.suprsend</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
