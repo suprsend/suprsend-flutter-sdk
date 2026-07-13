@@ -5,6 +5,7 @@ import 'package:suprsend_flutter_sdk/suprsend_flutter_sdk.dart';
 
 import 'screens/home_screen.dart';
 import 'screens/login_screen.dart';
+import 'services/auth_token_service.dart';
 
 const String _distinctIdPrefKey = 'suprsend_distinct_id';
 
@@ -50,19 +51,38 @@ class _RootViewState extends State<RootView> {
   bool _loading = true;
   String? _distinctId;
 
+  final AuthTokenService _tokenService =
+      AuthTokenService(dotenv.env['SUPRSEND_AUTH_TOKEN_URL'] ?? '');
+
   @override
   void initState() {
     super.initState();
     _restoreSession();
   }
 
+  /// Identifies [distinctId], fetching a signed user token from the backend and
+  /// registering a [refreshUserToken] callback so the SDK can transparently
+  /// obtain a new token before the current one expires. If no token endpoint is
+  /// configured we fall back to identifying without a token.
+  Future<void> _identify(String distinctId) async {
+    final userToken = await _tokenService.fetchUserToken(distinctId);
+    await SuprSend.identify(
+      distinctId,
+      userToken: userToken,
+      refreshUserToken: _tokenService.isConfigured
+          ? (oldUserToken, tokenPayload) async =>
+              await _tokenService.fetchUserToken(distinctId) ?? oldUserToken
+          : null,
+    );
+  }
+
   Future<void> _restoreSession() async {
     final prefs = await SharedPreferences.getInstance();
     String? distinctId = prefs.getString(_distinctIdPrefKey);
     if (distinctId != null) {
-      if (!await SuprSend.isIdentified()) {
-        await SuprSend.identify(distinctId);
-      }
+      // Re-identify on launch so the token is refreshed and the
+      // refreshUserToken callback (in-memory only) is re-registered.
+      await _identify(distinctId);
     } else if (await SuprSend.isIdentified()) {
       distinctId = await SuprSend.getDistinctId();
     }
@@ -74,7 +94,7 @@ class _RootViewState extends State<RootView> {
   }
 
   Future<void> _handleLogin(String distinctId) async {
-    await SuprSend.identify(distinctId);
+    await _identify(distinctId);
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_distinctIdPrefKey, distinctId);
     if (!mounted) return;

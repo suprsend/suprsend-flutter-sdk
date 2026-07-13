@@ -51,14 +51,6 @@ android {
         minSdkVersion 19
     }
 
-    dependencies {
-        // Native SuprSend Android SDK (publicKey / JWT based).
-        api 'com.suprsend:native:0.1.11'
-
-        testImplementation 'org.jetbrains.kotlin:kotlin-test'
-        testImplementation 'org.mockito:mockito-core:5.0.0'
-    }
-
     testOptions {
         unitTests.all {
             useJUnitPlatform()
@@ -70,4 +62,12 @@ android {
             }
         }
     }
+}
+
+dependencies {
+    // Native SuprSend Android SDK (publicKey / JWT based).
+    api 'com.suprsend:native:0.1.14'
+
+    testImplementation 'org.jetbrains.kotlin:kotlin-test'
+    testImplementation 'org.mockito:mockito-core:5.0.0'
 }

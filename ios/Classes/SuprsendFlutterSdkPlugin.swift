@@ -3,9 +3,13 @@ import UIKit
 import SuprSendSwift
 
 public class SuprsendFlutterSdkPlugin: NSObject, FlutterPlugin {
+  // Kept so the native SDK can call back into Dart (e.g. refreshUserToken).
+  private var channel: FlutterMethodChannel?
+
   public static func register(with registrar: FlutterPluginRegistrar) {
     let channel = FlutterMethodChannel(name: "suprsend_flutter_sdk", binaryMessenger: registrar.messenger())
     let instance = SuprsendFlutterSdkPlugin()
+    instance.channel = channel
     registrar.addMethodCallDelegate(instance, channel: channel)
   }
 
@@ -37,8 +41,14 @@ public class SuprsendFlutterSdkPlugin: NSObject, FlutterPlugin {
     case "identify":
       let distinctID = args["distinctId"] as? String ?? ""
       let userToken = args["userToken"] as? String
+      let hasRefresh = args["hasRefreshUserToken"] as? Bool ?? false
+      let options: AuthenticateOptions? = hasRefresh
+        ? AuthenticateOptions(refreshUserToken: { [weak self] oldUserToken, _ in
+            await self?.requestRefreshedToken(oldUserToken)
+          })
+        : nil
       Task {
-        let r = await client.identify(distinctID: distinctID, userToken: userToken)
+        let r = await client.identify(distinctID: distinctID, userToken: userToken, options: options)
         self.reply(result, r)
       }
 
@@ -132,6 +142,27 @@ public class SuprsendFlutterSdkPlugin: NSObject, FlutterPlugin {
 
     default:
       result(FlutterMethodNotImplemented)
+    }
+  }
+
+  /// Bridges the native `refreshUserToken` callback to Dart: asks the Flutter
+  /// side for a fresh token and returns it (nil on failure). The native SDK
+  /// decodes and passes the JWT payload too, but we let Dart derive it so both
+  /// platforms behave identically.
+  private func requestRefreshedToken(_ oldUserToken: String) async -> String? {
+    await withCheckedContinuation { continuation in
+      DispatchQueue.main.async {
+        guard let channel = self.channel else {
+          continuation.resume(returning: nil)
+          return
+        }
+        channel.invokeMethod(
+          "refreshUserToken",
+          arguments: ["oldUserToken": oldUserToken]
+        ) { result in
+          continuation.resume(returning: result as? String)
+        }
+      }
     }
   }
 

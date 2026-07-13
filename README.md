@@ -74,6 +74,17 @@ await SuprSend.identify('user-distinct-id');
 // Recommended: pass a JWT signed by your backend for authenticated mode.
 await SuprSend.identify('user-distinct-id', userToken: jwt);
 
+// Enhanced security: let the SDK fetch a fresh JWT before the current one
+// expires. `refreshUserToken` receives the expiring token and its decoded
+// payload, and must return the new signed token.
+await SuprSend.identify(
+  'user-distinct-id',
+  userToken: jwt,
+  refreshUserToken: (oldUserToken, tokenPayload) async {
+    return await myBackend.fetchSuprSendToken('user-distinct-id');
+  },
+);
+
 final identified = await SuprSend.isIdentified();
 final distinctId = await SuprSend.getDistinctId();
 

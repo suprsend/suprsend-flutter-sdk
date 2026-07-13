@@ -5,7 +5,8 @@
     <application
         android:label="suprsend_flutter_sdk_example"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:usesCleartextTraffic="true"><!-- demo only: allows the local http:// token endpoint -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
