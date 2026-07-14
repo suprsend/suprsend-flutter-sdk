@@ -6,13 +6,6 @@ Official Flutter SDK for [SuprSend](https://www.suprsend.com) — user
 identification, event tracking, user properties & channels, and push
 notifications.
 
-This plugin is a thin, type-safe Dart wrapper over the native SuprSend SDKs:
-
-| Platform | Native SDK | Min version |
-| -------- | ---------- | ----------- |
-| Android  | `com.suprsend:native` 2.0.1 | minSdk 19 |
-| iOS      | `SuprSendSwift` 1.2.0 | iOS 15.0 |
-
 ## Installation
 
 ```yaml
@@ -24,27 +17,19 @@ dependencies:
 flutter pub get
 ```
 
-### iOS
+**Requirements:** iOS 15.0+, Android minSdk 19.
 
-The iOS deployment target must be at least **15.0**. In `ios/Podfile`:
+For iOS, set the deployment target in `ios/Podfile`, then run `pod install`:
 
 ```ruby
 platform :ios, '15.0'
 ```
 
-Then run `cd ios && pod install`.
-
-### Android
-
-No extra setup is required for the core SDK — the native dependency is pulled in
-automatically. For push notifications, add Firebase Cloud Messaging to your app
-(see [Push notifications](#push-notifications)).
-
 ## Quick start
 
-Initialize the SDK once, as early as possible (e.g. in `main`), by constructing
-it with your workspace **public key** (found in the SuprSend dashboard).
-Everything else is then called statically on the `SuprSend` class.
+Initialize the SDK once, as early as possible (e.g. in `main`), with your
+workspace **public key** from the SuprSend dashboard. Everything else is called
+statically on the `SuprSend` class.
 
 ```dart
 import 'package:suprsend_flutter_sdk/suprsend_flutter_sdk.dart';
@@ -56,7 +41,6 @@ void main() {
     'YOUR_PUBLIC_KEY',
     appName: 'My App',       // optional
     appVersion: '1.0.0',     // optional
-    // host: 'https://hub.suprsend.com', // optional custom host
   );
 
   runApp(const MyApp());
@@ -74,9 +58,7 @@ await SuprSend.identify('user-distinct-id');
 // Recommended: pass a JWT signed by your backend for authenticated mode.
 await SuprSend.identify('user-distinct-id', userToken: jwt);
 
-// Enhanced security: let the SDK fetch a fresh JWT before the current one
-// expires. `refreshUserToken` receives the expiring token and its decoded
-// payload, and must return the new signed token.
+// Optional: let the SDK fetch a fresh JWT before the current one expires.
 await SuprSend.identify(
   'user-distinct-id',
   userToken: jwt,
@@ -88,7 +70,7 @@ await SuprSend.identify(
 final identified = await SuprSend.isIdentified();
 final distinctId = await SuprSend.getDistinctId();
 
-// On logout — detaches the push token by default.
+// On logout.
 await SuprSend.reset();
 ```
 
@@ -114,7 +96,7 @@ await user.append({'tags': 'beta'});
 await user.remove({'tags': 'beta'});
 await user.unset(['plan']);
 
-// Communication channels
+// Communication channels (each has a matching remove*).
 await user.addEmail('ada@example.com');
 await user.addSMS('+15551234567');        // E.164 format
 await user.addWhatsapp('+15551234567');
@@ -126,27 +108,15 @@ await user.setTimezone('America/New_York');
 ## Push notifications
 
 Push is configured natively on each platform; there is no Dart API to call.
-Token registration, permission prompts and subscription sync are handled by the
-underlying native SDKs.
+Token registration, permission prompts and subscription sync are handled for you.
 
-### iOS
-
-Request notification permission and register the APNs token from your
-`AppDelegate`, and forward notification delegate callbacks to
-`SuprSendClient.shared.push`. To render rich notifications, add a Notification
-Service Extension that subclasses `SuprSendNotificationService`. See the
-[iOS push guide](https://docs.suprsend.com).
-
-### Android
-
-1. Add Firebase to your app (`google-services.json` + the Google Services
-   Gradle plugin).
-2. The plugin bundles `app.suprsend.fcm.SSFirebaseMessagingService` (merged into
-   your manifest automatically), which obtains the FCM token and keeps it in
-   sync with SuprSend.
-
-If your app uses its own `FirebaseMessagingService`, forward new tokens to the
-bundled service. See the [Android push guide](https://docs.suprsend.com).
+- **iOS:** request notification permission and register the APNs token from your
+  `AppDelegate`, then forward the notification delegate callbacks to SuprSend.
+  For rich notifications, add a Notification Service Extension.
+  See the [iOS push guide](https://docs.suprsend.com).
+- **Android:** add Firebase to your app (`google-services.json` + the Google
+  Services Gradle plugin). Token sync works automatically.
+  See the [Android push guide](https://docs.suprsend.com).
 
 ## SSResponse
 
@@ -169,12 +139,11 @@ if (res.isSuccess) {
 
 ## Logging
 
+Logging is off by default. Turn on verbose logging while debugging:
+
 ```dart
 await SuprSend.enableLogging();
 ```
-
-> Logging is off by default. `enableLogging()` turns on verbose logging in the
-> native SDK (mapped to `LogLevel.VERBOSE` on Android).
 
 ## Example
 

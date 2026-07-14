@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:suprsend_flutter_sdk/suprsend_flutter_sdk.dart';
+
+import '../router/app_router.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
     super.key,
     required this.distinctId,
-    required this.onLogout,
   });
 
   final String distinctId;
-  final Future<void> Function() onLogout;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -18,7 +19,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   static const String _sampleEmail = 'user@example.com';
-  bool _loggingOut = false;
 
   @override
   void initState() {
@@ -55,16 +55,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<void> _logout() async {
-    if (_loggingOut) return;
-    setState(() => _loggingOut = true);
-    try {
-      await widget.onLogout();
-    } finally {
-      if (mounted) setState(() => _loggingOut = false);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -76,14 +66,41 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text('Welcome', style: theme.textTheme.bodyMedium),
-              const SizedBox(height: 4),
-              Text(
-                widget.distinctId,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.headlineSmall
-                    ?.copyWith(fontWeight: FontWeight.bold),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Welcome', style: theme.textTheme.bodyMedium),
+                        const SizedBox(height: 4),
+                        Text(
+                          widget.distinctId,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.headlineSmall
+                              ?.copyWith(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  // Tap to open the profile screen (same route the
+                  // com.suprsend://profile deep link resolves to).
+                  Tooltip(
+                    message: 'Profile',
+                    child: InkWell(
+                      onTap: () => context.push(AppRouter.profile),
+                      customBorder: const CircleBorder(),
+                      child: CircleAvatar(
+                        radius: 24,
+                        backgroundColor: theme.colorScheme.primary,
+                        child: const Icon(Icons.person, color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 28),
               _action('Add email', () => SuprSend.user.addEmail(_sampleEmail)),
@@ -95,17 +112,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   'home_button_clicked',
                   {'source': 'home_screen'},
                 ),
-              ),
-              const Spacer(),
-              OutlinedButton(
-                onPressed: _loggingOut ? null : _logout,
-                child: _loggingOut
-                    ? const SizedBox(
-                        height: 18,
-                        width: 18,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : const Text('Logout'),
               ),
             ],
           ),

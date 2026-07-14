@@ -23,9 +23,27 @@
               android:name="io.flutter.embedding.android.NormalTheme"
               android:resource="@style/NormalTheme"
               />
+            <!-- Let app_links be the single deep-link handler (see DeepLinkService)
+                 instead of Flutter's built-in Router integration, which would try
+                 to parse com.suprsend://profile as a path and miss the host. -->
+            <meta-data
+              android:name="flutter_deeplinking_enabled"
+              android:value="false"
+              />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+            <!-- OS-based deep linking: the OS routes com.suprsend://* URLs to this
+                 activity. launchMode=singleTop above means links received while the
+                 app is running are delivered to onNewIntent (handled by app_links).
+                 Test: adb shell am start -a android.intent.action.VIEW \
+                       -d "com.suprsend://profile" com.suprsend.flutterexample -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="com.suprsend"/>
             </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.
