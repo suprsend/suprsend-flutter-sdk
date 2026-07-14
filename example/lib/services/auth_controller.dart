@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:suprsend_flutter_sdk/suprsend_flutter_sdk.dart';
 
 import 'auth_token_service.dart';
+import 'push_service.dart';
 
 /// Holds the SuprSend session (the logged-in distinct id) and exposes it as a
 /// [Listenable] so the router can react to sign-in / sign-out via
@@ -53,6 +54,8 @@ class AuthController extends ChangeNotifier {
     _distinctId = distinctId;
     _loading = false;
     notifyListeners();
+    // Register the FCM push token now that we know who the user is.
+    if (isLoggedIn) await PushService.instance.syncToken();
   }
 
   Future<void> login(String distinctId, {bool useUserToken = false}) async {
@@ -62,6 +65,8 @@ class AuthController extends ChangeNotifier {
     await prefs.setBool(_useUserTokenPrefKey, useUserToken);
     _distinctId = distinctId;
     notifyListeners();
+    // Hand the FCM token to SuprSend now that the user is identified.
+    await PushService.instance.syncToken();
   }
 
   Future<void> logout() async {

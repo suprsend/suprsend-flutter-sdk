@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:suprsend_flutter_sdk/suprsend_flutter_sdk.dart';
 
 import '../router/app_router.dart';
@@ -20,20 +19,9 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   static const String _sampleEmail = 'user@example.com';
 
-  @override
-  void initState() {
-    super.initState();
-    _requestNotificationPermission();
-  }
-
-  Future<void> _requestNotificationPermission() async {
-    final status = await Permission.notification.status;
-    // On Android 13+ this shows the POST_NOTIFICATIONS system dialog.
-    // On older versions notifications are granted by default, so this is a no-op.
-    if (status.isDenied) {
-      await Permission.notification.request();
-    }
-  }
+  // Notification permission is requested by PushService as part of the FCM
+  // headless flow (see lib/services/push_service.dart), so the home screen no
+  // longer needs to prompt for it.
 
   void _toast(String message) {
     if (!mounted) return;

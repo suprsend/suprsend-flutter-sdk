@@ -1,3 +1,5 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
@@ -7,11 +9,17 @@ import 'router/app_router.dart';
 import 'services/auth_controller.dart';
 import 'services/auth_token_service.dart';
 import 'services/deep_link_service.dart';
+import 'services/push_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await dotenv.load();
+
+  // Headless FCM: initialize Firebase and register the background message
+  // handler before anything else touches messaging.
+  await Firebase.initializeApp();
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
   SuprSend(
     dotenv.env['SUPRSEND_PUBLIC_KEY'] ?? '',
@@ -19,6 +27,10 @@ Future<void> main() async {
     appVersion: '3.0.0',
   );
   await SuprSend.enableLogging();
+
+  // Wire up FCM listeners. The token is registered with SuprSend after the
+  // user is identified (see AuthController).
+  await PushService.instance.init();
 
   runApp(const ExampleApp());
 }

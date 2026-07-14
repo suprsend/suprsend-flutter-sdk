@@ -29,6 +29,8 @@ android {
     ndkVersion flutter.ndkVersion
 
     compileOptions {
+        // Required by flutter_local_notifications (uses java.time APIs).
+        coreLibraryDesugaringEnabled true
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -66,5 +68,9 @@ flutter {
 }
 
 dependencies {
-    implementation("com.google.firebase:firebase-messaging:22.0.0") // or latest version
+    // Backports java.time for flutter_local_notifications. 2.0.4 (needs AGP
+    // 7.4+) is required: older 1.x desugaring rewrites java.util.function.
+    // Consumer and breaks androidx.window with a runtime NoSuchMethodError
+    // (addWindowLayoutInfoListener) that crashes the app on launch.
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.4'
 }

@@ -39,8 +39,16 @@ dependencies:
   # Persists the logged-in distinct id so the session survives app restarts.
   shared_preferences: ^2.2.2
 
-  # Requests the runtime notification permission (Android 13+ POST_NOTIFICATIONS).
-  permission_handler: ^11.3.0
+  # Firebase Cloud Messaging (headless push): the app owns the FCM token,
+  # permission prompt and message handling; the token is handed to SuprSend via
+  # SuprSend.user.addPush (see lib/services/push_service.dart).
+  # 2.x / 14.x are the last lines compatible with Flutter 3.19 / Dart 3.3.
+  firebase_core: ^2.32.0
+  firebase_messaging: ^14.9.4
+
+  # Displays notifications locally (headless push draws nothing itself), used
+  # for foreground, background and terminated-state messages.
+  flutter_local_notifications: ^17.2.4
 
   # Receives OS deep links (custom URL scheme, e.g. com.suprsend://profile) on
   # both cold start and while the app is already running.
