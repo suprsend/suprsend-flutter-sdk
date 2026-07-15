@@ -2,12 +2,7 @@
   xmlns:tools="http://schemas.android.com/tools"
   package="com.suprsend.suprsend_flutter_sdk">
 
-  <!--
-    Firebase Cloud Messaging service used by SuprSend to receive push
-    notifications and auto-register the FCM token. It is declared here so it is
-    merged into the host app automatically. Apps that use a different FCM
-    service can remove this with a tools:node="remove" override.
-  -->
+  <!-- SuprSend FCM service (auto-registers the push token); merged into the host app. Override with tools:node="remove" to use a different service. -->
   <application>
     <service
       android:name="app.suprsend.fcm.SSFirebaseMessagingService"

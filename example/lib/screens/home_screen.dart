@@ -28,8 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _requestNotificationPermission() async {
     final status = await Permission.notification.status;
-    // On Android 13+ this shows the POST_NOTIFICATIONS system dialog.
-    // On older versions notifications are granted by default, so this is a no-op.
+    // Android 13+ shows the POST_NOTIFICATIONS dialog; older versions grant by default.
     if (status.isDenied) {
       await Permission.notification.request();
     }
@@ -86,8 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  // Tap to open the profile screen (same route the
-                  // com.suprsend://profile deep link resolves to).
+                  // Opens profile — same route com.suprsend://profile resolves to.
                   Tooltip(
                     message: 'Profile',
                     child: InkWell(

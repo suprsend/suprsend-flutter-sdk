@@ -39,10 +39,9 @@ class _ExampleAppState extends State<ExampleApp> {
   @override
   void initState() {
     super.initState();
-    // Restore any persisted session; the router shows a splash until this
-    // resolves, then redirects to /home or /login.
+    // Restore any persisted session; the router shows a splash until it resolves.
     _auth.restore();
-    // Start listening for com.suprsend:// deep links (cold start + running).
+    // Listen for com.suprsend:// deep links (cold start + while running).
     _deepLinkService.init();
   }
 

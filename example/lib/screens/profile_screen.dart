@@ -3,10 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../router/app_router.dart';
 
-/// Profile screen. Reached either by in-app navigation (the profile icon on the
-/// home screen) or the `com.suprsend://profile` deep link — the router builds
-/// it the same way for both. Shows the signed-in distinct id and a logout
-/// action.
+// Reached via in-app nav or the com.suprsend://profile deep link — the router builds it the same way.
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({
     super.key,

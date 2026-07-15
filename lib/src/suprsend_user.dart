@@ -67,7 +67,6 @@ class SuprSendUser {
     if (Platform.isIOS) {
       return _invoke('removeiOSPush', {'token': token});
     }
-    // No-op until the Android native SDK exposes a remove-FCM-token method.
     return _invoke('removeAndroidFcmPush', {'token': token});
   }
 }

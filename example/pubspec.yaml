@@ -42,13 +42,10 @@ dependencies:
   # Requests the runtime notification permission (Android 13+ POST_NOTIFICATIONS).
   permission_handler: ^11.3.0
 
-  # Receives OS deep links (custom URL scheme, e.g. com.suprsend://profile) on
-  # both cold start and while the app is already running.
+  # Receives OS deep links (custom URL scheme) on cold start and while running.
   app_links: ^6.3.2
 
-  # Declarative routing. A single route table (see lib/router/app_router.dart)
-  # is the source of truth for in-app navigation AND deep links.
-  # 13.x is the last line compatible with Flutter 3.19 / Dart 3.3.
+  # Declarative routing; single route table for in-app nav and deep links (13.x = last for Flutter 3.19 / Dart 3.3).
   go_router: ^13.2.4
 
   # Fetches the SuprSend user token (JWT) from your backend.

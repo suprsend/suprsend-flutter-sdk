@@ -29,8 +29,7 @@ class SuprsendFlutterSdkPlugin : FlutterPlugin, MethodCallHandler {
   private val executor = Executors.newSingleThreadExecutor()
   private val mainHandler = Handler(Looper.getMainLooper())
 
-  // Latest user token, so the native RefreshTokenCallback (which only receives
-  // the distinctId) can pass the expiring token to Dart like iOS does.
+  // Latest user token, so the native callback can pass the expiring token to Dart like iOS.
   @Volatile
   private var currentUserToken: String? = null
 
@@ -174,13 +173,7 @@ class SuprsendFlutterSdkPlugin : FlutterPlugin, MethodCallHandler {
     }
   }
 
-  /**
-   * Builds a native [RefreshTokenCallback] that bridges to the Dart
-   * `refreshUserToken` callback. The native SDK invokes [getToken] synchronously
-   * on a worker thread; we hop to the main thread to invoke the Flutter channel
-   * and block the worker thread until Dart returns the new token. This never
-   * runs on the platform main thread, so blocking here is safe.
-   */
+  // Bridges the native RefreshTokenCallback to Dart; blocks the worker thread (never the main thread) until Dart returns.
   private fun refreshTokenCallback() = object : RefreshTokenCallback {
     override fun getToken(distinctId: String): String {
       val latch = CountDownLatch(1)

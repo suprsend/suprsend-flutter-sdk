@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Shown while [AuthController.restore] determines whether there's a persisted
-/// session. The router redirects away from here to `/home` or `/login` (or a
-/// pending deep link) as soon as the session state is known.
+// Shown while AuthController.restore checks for a persisted session; the router redirects away once known.
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
 

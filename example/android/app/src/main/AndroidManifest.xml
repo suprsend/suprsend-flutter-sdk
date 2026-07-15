@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.INTERNET" />
-    <!--If you are targeting to API 33 (Android 13) you will additional need to add POST_NOTIFICATIONS -->
+    <!-- API 33+ (Android 13) requires POST_NOTIFICATIONS. -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <application
         android:label="suprsend_flutter_sdk_example"
@@ -23,9 +23,7 @@
               android:name="io.flutter.embedding.android.NormalTheme"
               android:resource="@style/NormalTheme"
               />
-            <!-- Let app_links be the single deep-link handler (see DeepLinkService)
-                 instead of Flutter's built-in Router integration, which would try
-                 to parse com.suprsend://profile as a path and miss the host. -->
+            <!-- app_links handles deep links (see DeepLinkService); disable Flutter's built-in routing. -->
             <meta-data
               android:name="flutter_deeplinking_enabled"
               android:value="false"
@@ -34,11 +32,7 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-            <!-- OS-based deep linking: the OS routes com.suprsend://* URLs to this
-                 activity. launchMode=singleTop above means links received while the
-                 app is running are delivered to onNewIntent (handled by app_links).
-                 Test: adb shell am start -a android.intent.action.VIEW \
-                       -d "com.suprsend://profile" com.suprsend.flutterexample -->
+            <!-- OS deep linking: routes com.suprsend://* to this activity (singleTop -> onNewIntent while running). -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>

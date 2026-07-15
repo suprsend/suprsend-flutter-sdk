@@ -145,10 +145,7 @@ public class SuprsendFlutterSdkPlugin: NSObject, FlutterPlugin {
     }
   }
 
-  /// Bridges the native `refreshUserToken` callback to Dart: asks the Flutter
-  /// side for a fresh token and returns it (nil on failure). The native SDK
-  /// decodes and passes the JWT payload too, but we let Dart derive it so both
-  /// platforms behave identically.
+  // Bridges the native refreshUserToken callback to Dart; lets Dart derive the JWT payload so both platforms match.
   private func requestRefreshedToken(_ oldUserToken: String) async -> String? {
     await withCheckedContinuation { continuation in
       DispatchQueue.main.async {

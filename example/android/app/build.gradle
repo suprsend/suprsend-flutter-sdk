@@ -66,5 +66,5 @@ flutter {
 }
 
 dependencies {
-    implementation("com.google.firebase:firebase-messaging:22.0.0") // or latest version
+    implementation("com.google.firebase:firebase-messaging:22.0.0")
 }

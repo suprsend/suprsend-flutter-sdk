@@ -6,16 +6,6 @@ import 'ss_response.dart';
 import 'suprsend_user.dart';
 import 'version.dart';
 
-/// Called by the SDK to obtain a fresh user token shortly before the current
-/// one expires (enhanced security mode). Return the new signed JWT.
-///
-/// - [oldUserToken] is the token that is about to expire (empty string if none
-///   is available yet).
-/// - [tokenPayload] is the decoded JWT claims of [oldUserToken] (empty map if
-///   the token can't be decoded).
-///
-/// Mirrors the `refreshUserToken(oldUserToken, tokenPayload)` callback used by
-/// SuprSend's web, React and iOS SDKs.
 typedef SSRefreshUserTokenCallback = Future<String> Function(
   String oldUserToken,
   Map<String, dynamic> tokenPayload,
@@ -50,12 +40,6 @@ class SuprSend {
 
   static final SuprSend _instance = SuprSend._();
 
-  /// Identifies the current user with [distinctId].
-  ///
-  /// In enhanced security mode pass the signed [userToken] (JWT). Provide
-  /// [refreshUserToken] to let the SDK request a fresh token from you shortly
-  /// before the current one expires — it is invoked with the expiring token and
-  /// its decoded payload, and must return the new signed JWT.
   static Future<SSResponse> identify(
     String distinctId, {
     String? userToken,
@@ -71,8 +55,6 @@ class SuprSend {
     return SSResponse.fromMap(result as Map<dynamic, dynamic>?);
   }
 
-  /// Registers the reverse method-call handler used by the native SDKs to call
-  /// back into Dart (currently only for [refreshUserToken]). Idempotent.
   static void _ensureHandlerRegistered() {
     if (_handlerRegistered) return;
     _channel.setMethodCallHandler(_handleNativeCall);
@@ -89,8 +71,7 @@ class SuprSend {
         try {
           return await callback(oldUserToken, _decodeJwtPayload(oldUserToken));
         } catch (_) {
-          // Swallow errors so the native side falls back to retry/expire
-          // rather than crashing the platform call.
+          // Swallow errors so the native side falls back to retry/expire.
           return null;
         }
       default:
@@ -98,8 +79,6 @@ class SuprSend {
     }
   }
 
-  /// Decodes the claims segment of a JWT. Returns an empty map if [token] is
-  /// not a well-formed JWT.
   static Map<String, dynamic> _decodeJwtPayload(String token) {
     try {
       final parts = token.split('.');

@@ -4,10 +4,7 @@ import 'package:suprsend_flutter_sdk/suprsend_flutter_sdk.dart';
 
 import 'auth_token_service.dart';
 
-/// Holds the SuprSend session (the logged-in distinct id) and exposes it as a
-/// [Listenable] so the router can react to sign-in / sign-out via
-/// `refreshListenable`. All identify / reset logic lives here so screens and the
-/// router stay free of SDK details.
+// Holds the SuprSend session and exposes it as a Listenable so the router reacts to sign-in/out.
 class AuthController extends ChangeNotifier {
   AuthController(this._tokenService);
 
@@ -19,12 +16,9 @@ class AuthController extends ChangeNotifier {
   bool _loading = true;
   String? _distinctId;
 
-  /// A deep-link location (e.g. `/profile`) that arrived during startup, before
-  /// we knew whether the user was signed in. Consumed by the router once the
-  /// user is signed in so the link is replayed.
+  // A deep-link location that arrived during startup, replayed by the router after sign-in.
   String? _pendingLocation;
 
-  /// True while the session is being restored on launch.
   bool get loading => _loading;
   bool get isLoggedIn => _distinctId != null;
   String? get distinctId => _distinctId;
@@ -37,8 +31,7 @@ class AuthController extends ChangeNotifier {
     return location;
   }
 
-  /// Restores a persisted session on launch. Re-identifies so the user token is
-  /// refreshed and the (in-memory) refresh callback is re-registered.
+  // Restores a persisted session, re-identifying so the token and refresh callback are refreshed.
   Future<void> restore() async {
     final prefs = await SharedPreferences.getInstance();
     String? distinctId = prefs.getString(_distinctIdPrefKey);
@@ -74,15 +67,7 @@ class AuthController extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Identifies [distinctId].
-  ///
-  /// When [useUserToken] is false (the default), this is a plain identify — no
-  /// backend call and no refresh callback.
-  ///
-  /// When true, it runs in enhanced security mode: it fetches a signed user
-  /// token from the backend and registers a [refreshUserToken] callback so the
-  /// SDK can transparently obtain a new token before the current one expires.
-  /// Falls back to identifying without a token if no endpoint is configured.
+  // Plain identify when useUserToken is false; else fetch a signed token and register a refresh callback.
   Future<void> _identify(String distinctId, {required bool useUserToken}) async {
     if (!useUserToken) {
       await SuprSend.identify(distinctId);

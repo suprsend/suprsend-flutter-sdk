@@ -33,8 +33,7 @@ target 'Runner' do
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 
-  # Source SuprSendSwift from the local sibling checkout during development so
-  # the plugin can use members not yet exposed in a published release.
+  # Source SuprSendSwift from the local sibling checkout during development.
   pod 'SuprSendSwift', :path => '../../../suprsend-swift-sdk'
 
   target 'RunnerTests' do
@@ -42,8 +41,7 @@ target 'Runner' do
   end
 end
 
-# Notification Service Extension — links SuprSendSwift so it can render rich
-# (image / media) notifications via SuprSendNotificationService.
+# Notification Service Extension: links SuprSendSwift for rich (image/media) notifications.
 target 'NotificationService' do
   use_frameworks!
   pod 'SuprSendSwift', :path => '../../../suprsend-swift-sdk'
@@ -53,9 +51,7 @@ post_install do |installer|
   installer.pods_project.targets.each do |target|
     flutter_additional_ios_build_settings(target)
     target.build_configurations.each do |config|
-      # SuprSendSwift contains UIApplication.shared calls (used only from the
-      # app, never from the Notification Service Extension). CocoaPods marks the
-      # pod extension-only because the NSE links it; relax that so it compiles.
+      # Relax extension-only API check: SuprSendSwift's UIApplication.shared calls run only from the app.
       config.build_settings['APPLICATION_EXTENSION_API_ONLY'] = 'NO'
     end
   end
