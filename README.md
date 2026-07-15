@@ -1,12 +1,10 @@
 # SuprSend Flutter SDK
 
-[![pub package](https://img.shields.io/pub/v/suprsend_flutter_sdk.svg)](https://pub.dev/packages/suprsend_flutter_sdk)
-
-Official Flutter SDK for [SuprSend](https://www.suprsend.com) — user
-identification, event tracking, user properties & channels, and push
-notifications.
+This SDK is used to integrate SuprSend features like Mobile Push, Preferences and InApp feed in to your Flutter application.
 
 ## Installation
+
+Add the SDK to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
@@ -25,11 +23,11 @@ For iOS, set the deployment target in `ios/Podfile`, then run `pod install`:
 platform :ios, '15.0'
 ```
 
-## Quick start
+## Integration Steps
 
-Initialize the SDK once, as early as possible (e.g. in `main`), with your
-workspace **public key** from the SuprSend dashboard. Everything else is called
-statically on the `SuprSend` class.
+### Step 1: Create Client Instance
+
+Initialize the SuprSend client inside `main`. All the methods of SuprSend SDK can be accessed only after creating instance.
 
 ```dart
 import 'package:suprsend_flutter_sdk/suprsend_flutter_sdk.dart';
@@ -37,118 +35,70 @@ import 'package:suprsend_flutter_sdk/suprsend_flutter_sdk.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
-  SuprSend(
-    'YOUR_PUBLIC_KEY',
-    appName: 'My App',       // optional
-    appVersion: '1.0.0',     // optional
-  );
+  SuprSend('YOUR_PUBLIC_KEY');
 
   runApp(const MyApp());
 }
 ```
 
-All asynchronous calls resolve to an [`SSResponse`](#ssresponse).
+| Parameter    | Description                                                                                      |
+| ------------ | ------------------------------------------------------------------------------------------------ |
+| `publicKey*` | **Required.** Your workspace public key from the SuprSend dashboard (**ApiKeys → Public Keys**). |
+| `host`       | Optional. Custom SuprSend API host; only needed for self-hosted or region-specific setups.       |
 
-## Identifying users
+### Step 2: Authenticate User
+
+Authenticate user so that all the actions performed after authenticating will be w.r.t that user. This is mandatory step and need to be called before using any other method. This is usually performed after successful login and on reload of page to re-authenticate user (can be changed based on your requirement).
 
 ```dart
-// Anonymous events are attributed to the current device until you identify.
-await SuprSend.identify('user-distinct-id');
-
-// Recommended: pass a JWT signed by your backend for authenticated mode.
-await SuprSend.identify('user-distinct-id', userToken: jwt);
-
-// Optional: let the SDK fetch a fresh JWT before the current one expires.
 await SuprSend.identify(
   'user-distinct-id',
-  userToken: jwt,
+  userToken: jwt, // only needed in production environments for security
   refreshUserToken: (oldUserToken, tokenPayload) async {
-    return await myBackend.fetchSuprSendToken('user-distinct-id');
+    return await myBackend.fetchSuprSendToken();
   },
 );
+```
 
-final identified = await SuprSend.isIdentified();
-final distinctId = await SuprSend.getDistinctId();
+| Properties       | Description                                                                                                                                                                                                                               |
+| :--------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| distinctId\*     | Unique identifier to identify a user across platform.                                                                                                                                                                                     |
+| userToken        | Mandatory when enhanced security mode is on. This is ES256 JWT token generated in your server-side. Refer [docs](https://docs.suprsend.com/docs/client-authentication#enhanced-security-mode-with-signed-user-token) to create userToken. |
+| refreshUserToken | This function is called by SDK internally to get new userToken when existing user token is expired. The returned string is used as the new userToken.                                                                                     |
 
-// On logout.
+### Step 3: Reset User
+
+This will remove user data from SuprSend instance similar to logout action.
+
+```dart
 await SuprSend.reset();
 ```
 
-## Tracking events
-
-```dart
-await SuprSend.track('product_viewed', {
-  'product_id': 42,
-  'name': 'Running shoes',
-  'price': 129.99,
-});
-```
-
-## User properties & channels
-
-```dart
-final user = SuprSend.user;
-
-await user.set({'first_name': 'Ada', 'plan': 'pro'});
-await user.setOnce({'signup_date': '2026-06-05'});
-await user.increment({'logins': 1});
-await user.append({'tags': 'beta'});
-await user.remove({'tags': 'beta'});
-await user.unset(['plan']);
-
-// Communication channels (each has a matching remove*).
-await user.addEmail('ada@example.com');
-await user.addSMS('+15551234567');        // E.164 format
-await user.addWhatsapp('+15551234567');
-
-await user.setPreferredLanguage('en');
-await user.setTimezone('America/New_York');
-```
-
-## Push notifications
-
-Push is configured natively on each platform; there is no Dart API to call.
-Token registration, permission prompts and subscription sync are handled for you.
-
-- **iOS:** request notification permission and register the APNs token from your
-  `AppDelegate`, then forward the notification delegate callbacks to SuprSend.
-  For rich notifications, add a Notification Service Extension.
-  See the [iOS push guide](https://docs.suprsend.com).
-- **Android:** add Firebase to your app (`google-services.json` + the Google
-  Services Gradle plugin). Token sync works automatically.
-  See the [Android push guide](https://docs.suprsend.com).
-
-## SSResponse
-
-```dart
-final res = await SuprSend.user.addEmail('ada@example.com');
-if (res.isSuccess) {
-  // ...
-} else {
-  print('${res.errorType}: ${res.errorMessage}');
-}
-```
-
-| Field | Type | Description |
-| ----- | ---- | ----------- |
-| `status` | `String` | `"success"` or `"error"` |
-| `isSuccess` | `bool` | Convenience getter |
-| `statusCode` | `int?` | HTTP status code, when available |
-| `errorType` | `String?` | e.g. `VALIDATION_ERROR`, `NETWORK_ERROR` |
-| `errorMessage` | `String?` | Human readable error |
-
 ## Logging
 
-Logging is off by default. Turn on verbose logging while debugging:
+Add below code in `main` below the SuprSend instance creation to see logs for debugging.
 
 ```dart
 await SuprSend.enableLogging();
 ```
 
-## Example
+## API Response
 
-A runnable example is in [`example/`](example/lib/main.dart).
+All SuprSend SDK methods returns `SSResponse`. Use it to check whether a call succeeded and to read error details when it didn't.
 
-## License
+```dart
+final response = await SuprSend.user.addEmail('user@example.com');
+if (response.isSuccess) {
+  // handle success
+} else {
+  print('${response.errorType}: ${response.errorMessage}');
+}
+```
 
-[MIT](LICENSE)
+| Property     | Description                                                      |
+| :----------- | :--------------------------------------------------------------- |
+| status       | `"success"` or `"error"`.                                        |
+| isSuccess    | `true` when the call succeeded (convenience getter over status). |
+| statusCode   | HTTP status code, when available.                                |
+| errorType    | Error category, e.g. `VALIDATION_ERROR`, `NETWORK_ERROR`.        |
+| errorMessage | Human-readable error message.                                    |
