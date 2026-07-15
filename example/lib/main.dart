@@ -16,8 +16,7 @@ Future<void> main() async {
 
   await dotenv.load();
 
-  // Headless FCM: initialize Firebase and register the background message
-  // handler before anything else touches messaging.
+  // Headless FCM: init Firebase and register the background handler before runApp.
   await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
@@ -28,8 +27,6 @@ Future<void> main() async {
   );
   await SuprSend.enableLogging();
 
-  // Wire up FCM listeners. The token is registered with SuprSend after the
-  // user is identified (see AuthController).
   await PushService.instance.init();
 
   runApp(const ExampleApp());
@@ -51,10 +48,7 @@ class _ExampleAppState extends State<ExampleApp> {
   @override
   void initState() {
     super.initState();
-    // Restore any persisted session; the router shows a splash until this
-    // resolves, then redirects to /home or /login.
     _auth.restore();
-    // Start listening for com.suprsend:// deep links (cold start + running).
     _deepLinkService.init();
   }
 

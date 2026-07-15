@@ -6,9 +6,7 @@ import 'auth_token_service.dart';
 import 'push_service.dart';
 
 /// Holds the SuprSend session (the logged-in distinct id) and exposes it as a
-/// [Listenable] so the router can react to sign-in / sign-out via
-/// `refreshListenable`. All identify / reset logic lives here so screens and the
-/// router stay free of SDK details.
+/// [Listenable] so the router can react to sign-in / sign-out.
 class AuthController extends ChangeNotifier {
   AuthController(this._tokenService);
 
@@ -20,12 +18,9 @@ class AuthController extends ChangeNotifier {
   bool _loading = true;
   String? _distinctId;
 
-  /// A deep-link location (e.g. `/profile`) that arrived during startup, before
-  /// we knew whether the user was signed in. Consumed by the router once the
-  /// user is signed in so the link is replayed.
+  // A deep-link location that arrived during startup, replayed once signed in.
   String? _pendingLocation;
 
-  /// True while the session is being restored on launch.
   bool get loading => _loading;
   bool get isLoggedIn => _distinctId != null;
   String? get distinctId => _distinctId;
@@ -38,8 +33,7 @@ class AuthController extends ChangeNotifier {
     return location;
   }
 
-  /// Restores a persisted session on launch. Re-identifies so the user token is
-  /// refreshed and the (in-memory) refresh callback is re-registered.
+  /// Restores a persisted session on launch and re-identifies the user.
   Future<void> restore() async {
     final prefs = await SharedPreferences.getInstance();
     String? distinctId = prefs.getString(_distinctIdPrefKey);
@@ -54,7 +48,6 @@ class AuthController extends ChangeNotifier {
     _distinctId = distinctId;
     _loading = false;
     notifyListeners();
-    // Register the FCM push token now that we know who the user is.
     if (isLoggedIn) await PushService.instance.syncToken();
   }
 
@@ -65,7 +58,6 @@ class AuthController extends ChangeNotifier {
     await prefs.setBool(_useUserTokenPrefKey, useUserToken);
     _distinctId = distinctId;
     notifyListeners();
-    // Hand the FCM token to SuprSend now that the user is identified.
     await PushService.instance.syncToken();
   }
 
@@ -75,19 +67,12 @@ class AuthController extends ChangeNotifier {
     await prefs.remove(_distinctIdPrefKey);
     await prefs.remove(_useUserTokenPrefKey);
     _distinctId = null;
-    _pendingLocation = null; // an explicit logout shouldn't resume anywhere
+    _pendingLocation = null;
     notifyListeners();
   }
 
-  /// Identifies [distinctId].
-  ///
-  /// When [useUserToken] is false (the default), this is a plain identify — no
-  /// backend call and no refresh callback.
-  ///
-  /// When true, it runs in enhanced security mode: it fetches a signed user
-  /// token from the backend and registers a [refreshUserToken] callback so the
-  /// SDK can transparently obtain a new token before the current one expires.
-  /// Falls back to identifying without a token if no endpoint is configured.
+  /// Identifies [distinctId]. When [useUserToken] is true, fetches a signed
+  /// token from the backend and registers a refresh callback (enhanced security).
   Future<void> _identify(String distinctId, {required bool useUserToken}) async {
     if (!useUserToken) {
       await SuprSend.identify(distinctId);

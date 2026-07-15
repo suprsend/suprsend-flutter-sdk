@@ -6,20 +6,12 @@ import '../screens/profile_screen.dart';
 import '../screens/splash_screen.dart';
 import '../services/auth_controller.dart';
 
-/// The single source of truth for navigation. Every screen is declared here
-/// once; both in-app navigation (`context.go` / `context.push`) and OS deep
-/// links resolve against the same table, so adding a screen is a one-route
-/// change with no deep-link plumbing to touch.
-///
-/// To add a screen:
-///  1. add a `GoRoute` below (e.g. `path: '/orders/:id'`);
-///  2. that's it — `com.suprsend://orders/123` reaches it automatically via
-///     [locationForDeepLink].
+/// The single source of truth for navigation. In-app navigation and OS deep
+/// links resolve against the same route table, so adding a screen is one route.
 class AppRouter {
   AppRouter._();
 
-  /// The custom URL scheme registered with the OS (see AndroidManifest.xml /
-  /// Info.plist). Deep links look like `com.suprsend://<host>/<path>`.
+  /// Custom URL scheme registered with the OS: `com.suprsend://<host>/<path>`.
   static const String deepLinkScheme = 'com.suprsend';
 
   static const String splash = '/splash';
@@ -30,7 +22,7 @@ class AppRouter {
   static GoRouter create(AuthController auth) {
     return GoRouter(
       initialLocation: splash,
-      // Re-run [redirect] whenever the session changes (sign-in / sign-out).
+      // Re-run redirect whenever the session changes.
       refreshListenable: auth,
       redirect: (context, state) => _redirect(auth, state),
       routes: <RouteBase>[
@@ -58,22 +50,18 @@ class AppRouter {
     );
   }
 
-  /// Auth gate. Keeps unauthenticated users on [login] and remembers where they
-  /// were trying to go so they land there after signing in.
+  /// Auth gate: keeps unauthenticated users on [login] and remembers where they
+  /// were headed so they land there after signing in.
   static String? _redirect(AuthController auth, GoRouterState state) {
     final String location = state.matchedLocation;
 
-    // Session still restoring: park on the splash and remember any deep link
-    // that arrived before we knew whether the user was signed in (e.g. a
-    // notification tap that launched the app). It's replayed after sign-in.
+    // Session still restoring: park on splash, remembering any deep link.
     if (auth.loading) {
       if (location != splash) auth.setPendingLocation(state.uri.toString());
       return location == splash ? null : splash;
     }
 
-    // Not signed in: gate everything behind the login screen. We deliberately
-    // do NOT record a pending location here — otherwise logging out from a
-    // screen would send the user back to it after signing in again.
+    // Not signed in: gate everything behind login (no pending location recorded).
     if (!auth.isLoggedIn) {
       return location == login ? null : login;
     }
@@ -85,12 +73,8 @@ class AppRouter {
     return null;
   }
 
-  /// Maps an OS deep link URI to an internal router location.
-  ///
-  /// The screen lives in the URI's **host** for a custom scheme, so
-  /// `com.suprsend://profile` becomes `/profile` and
-  /// `com.suprsend://orders/42?tab=x` becomes `/orders/42?tab=x`. Returns
-  /// `null` for a URI that isn't our scheme.
+  /// Maps an OS deep link URI to an internal router location, e.g.
+  /// `com.suprsend://profile` -> `/profile`. Returns `null` for other schemes.
   static String? locationForDeepLink(Uri uri) {
     if (uri.scheme != deepLinkScheme || uri.host.isEmpty) return null;
     final String path = (uri.path == '/' ? '' : uri.path);

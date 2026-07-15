@@ -6,16 +6,8 @@ import 'package:go_router/go_router.dart';
 
 import '../router/app_router.dart';
 
-/// Captures OS deep links (the `com.suprsend://` custom URL scheme) and feeds
-/// them to the router. This is deliberately thin: it only turns a URI into an
-/// internal location via [AppRouter.locationForDeepLink] and calls
-/// `router.go(...)`. All routing decisions (auth gating, which widget to build)
-/// live in [AppRouter], so new screens need no changes here.
-///
-/// Both delivery paths are handled:
-///  * cold start — the app was launched by the link ([AppLinks.getInitialLink]);
-///  * warm start — a link arrives while the app is already running
-///    ([AppLinks.uriLinkStream]).
+/// Captures OS deep links (the `com.suprsend://` scheme) and feeds them to the
+/// router. All routing decisions live in [AppRouter].
 class DeepLinkService {
   DeepLinkService(this._router);
 
@@ -24,7 +16,7 @@ class DeepLinkService {
   StreamSubscription<Uri>? _subscription;
 
   Future<void> init() async {
-    // Links arriving while the app is running (foreground or resumed).
+    // Links arriving while the app is running.
     _subscription = _appLinks.uriLinkStream.listen(
       _handleUri,
       onError: (Object err) =>
@@ -44,8 +36,6 @@ class DeepLinkService {
     final String? location = AppRouter.locationForDeepLink(uri);
     debugPrint('[SuprSend example] deep link $uri -> ${location ?? 'ignored'}');
     if (location == null) return;
-    // go() is frame-independent and idempotent, so repeated links to the same
-    // location just re-resolve through the router (no stacked duplicates).
     _router.go(location);
   }
 }

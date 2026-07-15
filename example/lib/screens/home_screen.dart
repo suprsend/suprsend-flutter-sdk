@@ -19,10 +19,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   static const String _sampleEmail = 'user@example.com';
 
-  // Notification permission is requested by PushService as part of the FCM
-  // headless flow (see lib/services/push_service.dart), so the home screen no
-  // longer needs to prompt for it.
-
   void _toast(String message) {
     if (!mounted) return;
     ScaffoldMessenger.of(context)
@@ -74,8 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  // Tap to open the profile screen (same route the
-                  // com.suprsend://profile deep link resolves to).
+                  // Opens the profile screen (same route as com.suprsend://profile).
                   Tooltip(
                     message: 'Profile',
                     child: InkWell(

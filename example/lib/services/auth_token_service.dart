@@ -2,18 +2,11 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-/// Fetches a SuprSend user token (JWT) from your backend.
-///
-/// In a real app this endpoint would be authenticated (e.g. behind your
-/// session cookie / bearer token) and return a short-lived JWT signed with your
-/// SuprSend workspace secret. Here it's a plain demo endpoint:
-///
-///   GET {baseUrl}/authentication-token/{distinctId}  ->  { "token": "<jwt>" }
+/// Fetches a SuprSend user token (JWT) from your backend endpoint.
 class AuthTokenService {
   const AuthTokenService(this.baseUrl);
 
-  /// Base URL of your token endpoint, e.g. `http://192.168.4.239:8787`.
-  /// Configured via `SUPRSEND_AUTH_TOKEN_URL` in `.env`.
+  /// Base URL of your token endpoint, from `SUPRSEND_AUTH_TOKEN_URL` in `.env`.
   final String baseUrl;
 
   bool get isConfigured => baseUrl.isNotEmpty;
@@ -32,8 +25,6 @@ class AuthTokenService {
       final token = body['token'];
       return (token is String && token.isNotEmpty) ? token : null;
     } catch (_) {
-      // Network / parse errors -> caller decides how to proceed (e.g. identify
-      // without a token, or let the SDK retry the refresh).
       return null;
     }
   }
