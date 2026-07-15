@@ -74,6 +74,13 @@ This will remove user data from SuprSend instance similar to logout action.
 await SuprSend.reset();
 ```
 
+## Push Notifications
+
+Push is configured natively on each platform. Follow the platform-specific guide:
+
+- [iOS Push Setup (APNs)](docs/IOS_PUSH_SETUP.md)
+- [Android Push Setup (FCM)](docs/ANDROID_PUSH_SETUP.md)
+
 ## Logging
 
 Add below code in `main` below the SuprSend instance creation to see logs for debugging.
