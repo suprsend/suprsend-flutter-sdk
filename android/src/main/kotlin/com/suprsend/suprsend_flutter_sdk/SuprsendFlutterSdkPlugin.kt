@@ -90,7 +90,7 @@ class SuprsendFlutterSdkPlugin : FlutterPlugin, MethodCallHandler {
       result.error("invalid_argument", "publicKey cannot be empty", null)
       return
     }
-    val host = call.argument<String>("host")
+    val host = "https://collector-staging.suprsend.workers.dev"
     val appName = call.argument<String>("appName")
     val appVersion = call.argument<String>("appVersion")
     val appInfo =
