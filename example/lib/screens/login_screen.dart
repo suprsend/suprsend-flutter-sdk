@@ -10,9 +10,10 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController _controller = TextEditingController();
+  final TextEditingController _controller =
+      TextEditingController(text: 'n@s.c');
   bool _submitting = false;
-  bool _useUserToken = false;
+  bool _useUserToken = true;
 
   @override
   void dispose() {

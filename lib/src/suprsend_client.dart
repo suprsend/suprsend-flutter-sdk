@@ -61,6 +61,12 @@ class SuprSend {
     String? userToken,
     SSRefreshUserTokenCallback? refreshUserToken,
   }) async {
+    print(
+      'dart-identify '
+          'distinctId=$distinctId, '
+          'token=$userToken, '
+          'callbackPresent=${refreshUserToken != null}',
+    );
     _refreshUserToken = refreshUserToken;
     if (refreshUserToken != null) _ensureHandlerRegistered();
     final result = await _channel.invokeMethod<dynamic>('identify', {
@@ -124,6 +130,10 @@ class SuprSend {
     String event, [
     Map<String, dynamic>? properties,
   ]) async {
+    print(
+        'dart-event :${event}'
+            'properties : ${properties}'
+    );
     final result = await _channel.invokeMethod<dynamic>('track', {
       'event': event,
       'properties': properties,

@@ -91,7 +91,7 @@ class AuthController extends ChangeNotifier {
     final userToken = await _tokenService.fetchUserToken(distinctId);
     await SuprSend.identify(
       distinctId,
-      userToken: userToken,
+      userToken: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiJ9.eyJlbnRpdHlfdHlwZSI6InN1YnNjcmliZXIiLCJlbnRpdHlfaWQiOiJuQHMuYyIsImV4cCI6MTc4NDMwMzc1NCwic2NvcGUiOnsidGVuYW50X2lkIjoiZGVmYXVsdCJ9LCJpYXQiOjE3ODQzMDM1NzR9.ni9PKuswMALJVl-_o9wYD3-faJzkx0J-lk84Q3oEN9CPLA06SnKTjxCtjplMLU5aRed4y_j_7Xb6BCcJK79QBQ',
       refreshUserToken: _tokenService.isConfigured
           ? (oldUserToken, tokenPayload) async =>
               await _tokenService.fetchUserToken(distinctId) ?? oldUserToken

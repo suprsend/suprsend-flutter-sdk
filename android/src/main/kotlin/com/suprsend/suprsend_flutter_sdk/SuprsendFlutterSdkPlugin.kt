@@ -1,12 +1,13 @@
 package com.suprsend.suprsend_flutter_sdk
 
+import android.util.Log
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import androidx.annotation.NonNull
 import app.suprsend.AppInfo
 import app.suprsend.ClientInfo
-import app.suprsend.RefreshTokenCallback
+import app.suprsend.RefreshUserTokenCallback
 import app.suprsend.SuprSend
 import app.suprsend.log.LogLevel
 import app.suprsend.model.ApiResponse
@@ -29,7 +30,7 @@ class SuprsendFlutterSdkPlugin : FlutterPlugin, MethodCallHandler {
   private val executor = Executors.newSingleThreadExecutor()
   private val mainHandler = Handler(Looper.getMainLooper())
 
-  // Latest user token, so the native RefreshTokenCallback (which only receives
+  // Latest user token, so the native RefreshUserTokenCallback (which only receives
   // the distinctId) can pass the expiring token to Dart like iOS does.
   @Volatile
   private var currentUserToken: String? = null
@@ -99,6 +100,13 @@ class SuprsendFlutterSdkPlugin : FlutterPlugin, MethodCallHandler {
       sdk = call.argument<String>("sdkName")!!,
       sdkVersion = call.argument<String>("sdkVersion")!!,
       lang = "flutter", langVersion = "disabled", appInfo = appInfo)
+    Log.d("suprsend", "bridge-configure() called")
+    Log.d("suprsend", "bridge-publicKey=$publicKey")
+    Log.d("suprsend", "bridge-host=$host")
+    Log.d("suprsend", "bridge-appName=$appName")
+    Log.d("suprsend", "bridge-appVersion=$appVersion")
+    Log.d("suprsend", "bridge-appInfo=$appInfo")
+    Log.d("suprsend", "bridge-clientInfo=$clientInfo")
     SuprSend.initialize(context = context, publicApiKey = publicKey, clientInfo = clientInfo, host = host)
     result.success(null)
   }
@@ -137,13 +145,14 @@ class SuprsendFlutterSdkPlugin : FlutterPlugin, MethodCallHandler {
     return when (call.method) {
       "identify" -> {
         val userToken = call.argument<String>("userToken")
+        Log.i("suprsend", "bridge-identify is commented:$userToken")
         currentUserToken = userToken
         val refreshCallback =
           if (call.argument<Boolean>("hasRefreshUserToken") == true) refreshTokenCallback() else null
         ss.identify(
           distinctId = call.argument<String>("distinctId") ?: "",
           userToken = userToken,
-          refreshTokenCallback = refreshCallback,
+          refreshUserToken = refreshCallback,
         )
       }
       "reset" -> {
@@ -151,16 +160,17 @@ class SuprsendFlutterSdkPlugin : FlutterPlugin, MethodCallHandler {
         null
       }
       "track" -> {
+        Log.i("suprsend", "bridge-track HIT — trackEvent is commented")
         val event = call.argument<String>("event") ?: ""
         val properties = jsonOf(call.argument("properties"))
-        if (properties != null) ss.trackEvent(event, properties) else ss.trackEvent(event)
+        if (properties != null) ss.track(event, properties) else ss.track(event)
       }
       "set" -> user.set(requireJson(call, "properties"))
       "setOnce" -> user.setOnce(requireJson(call, "properties"))
       "increment" -> user.increment(numberMap(call.argument("properties")))
       "append" -> user.append(requireJson(call, "properties"))
       "remove" -> user.remove(requireJson(call, "properties"))
-      "unset" -> user.unSet(call.argument<List<String>>("keys") ?: emptyList())
+      "unset" -> user.unset(call.argument<List<String>>("keys") ?: emptyList())
       "addEmail" -> user.addEmail(call.argument<String>("value") ?: "")
       "removeEmail" -> user.removeEmail(call.argument<String>("value") ?: "")
       "addSms" -> user.addSms(call.argument<String>("value") ?: "")
@@ -169,7 +179,7 @@ class SuprsendFlutterSdkPlugin : FlutterPlugin, MethodCallHandler {
       "removeWhatsapp" -> user.removeWhatsapp(call.argument<String>("value") ?: "")
       "setPreferredLanguage" -> user.setPreferredLanguage(call.argument<String>("value") ?: "")
       "setTimezone" -> user.setTimezone(call.argument<String>("value") ?: "")
-      "setAndroidFcmPush" -> user.setAndroidFcmPush(call.argument<String>("token") ?: "")
+      "setAndroidFcmPush" -> user.addFcmPush(call.argument<String>("token") ?: "")
       else -> null
     }
   }
@@ -181,7 +191,7 @@ class SuprsendFlutterSdkPlugin : FlutterPlugin, MethodCallHandler {
    * and block the worker thread until Dart returns the new token. This never
    * runs on the platform main thread, so blocking here is safe.
    */
-  private fun refreshTokenCallback() = object : RefreshTokenCallback {
+  private fun refreshTokenCallback() = object : RefreshUserTokenCallback {
     override fun getToken(distinctId: String): String {
       val latch = CountDownLatch(1)
       val holder = arrayOfNulls<String>(1)

@@ -24,6 +24,7 @@ class AuthTokenService {
     final uri = Uri.parse(
       '$baseUrl/authentication-token/${Uri.encodeComponent(distinctId)}',
     );
+    print('dart-Url:\n$uri');
     try {
       final response = await http.get(uri).timeout(const Duration(seconds: 15));
       if (response.statusCode != 200) return null;
