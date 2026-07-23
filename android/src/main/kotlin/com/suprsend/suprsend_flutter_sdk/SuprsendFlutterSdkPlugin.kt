@@ -6,7 +6,7 @@ import android.os.Looper
 import androidx.annotation.NonNull
 import app.suprsend.AppInfo
 import app.suprsend.ClientInfo
-import app.suprsend.RefreshTokenCallback
+import app.suprsend.RefreshUserTokenCallback
 import app.suprsend.SuprSend
 import app.suprsend.log.LogLevel
 import app.suprsend.model.ApiResponse
@@ -58,8 +58,6 @@ class SuprsendFlutterSdkPlugin : FlutterPlugin, MethodCallHandler {
       "registerForPush",
       "updatePushSubscription",
       "removePushSubscription" -> result.success(successMap())
-      // No-op until the Android native SDK exposes a remove-FCM-token method.
-      "removeAndroidFcmPush" -> result.success(successMap())
       "identify",
       "reset",
       "track",
@@ -77,7 +75,8 @@ class SuprsendFlutterSdkPlugin : FlutterPlugin, MethodCallHandler {
       "removeWhatsapp",
       "setPreferredLanguage",
       "setTimezone",
-      "setAndroidFcmPush" -> runAsync(call, result)
+      "setAndroidFcmPush",
+      "removeAndroidFcmPush" -> runAsync(call, result)
       else -> result.notImplemented()
     }
   }
@@ -142,7 +141,7 @@ class SuprsendFlutterSdkPlugin : FlutterPlugin, MethodCallHandler {
         ss.identify(
           distinctId = call.argument<String>("distinctId") ?: "",
           userToken = userToken,
-          refreshTokenCallback = refreshCallback,
+          refreshUserToken = refreshCallback,
         )
       }
       "reset" -> {
@@ -152,14 +151,14 @@ class SuprsendFlutterSdkPlugin : FlutterPlugin, MethodCallHandler {
       "track" -> {
         val event = call.argument<String>("event") ?: ""
         val properties = jsonOf(call.argument("properties"))
-        if (properties != null) ss.trackEvent(event, properties) else ss.trackEvent(event)
+        if (properties != null) ss.track(event, properties) else ss.track(event)
       }
       "set" -> user.set(requireJson(call, "properties"))
       "setOnce" -> user.setOnce(requireJson(call, "properties"))
       "increment" -> user.increment(numberMap(call.argument("properties")))
       "append" -> user.append(requireJson(call, "properties"))
       "remove" -> user.remove(requireJson(call, "properties"))
-      "unset" -> user.unSet(call.argument<List<String>>("keys") ?: emptyList())
+      "unset" -> user.unset(call.argument<List<String>>("keys") ?: emptyList())
       "addEmail" -> user.addEmail(call.argument<String>("value") ?: "")
       "removeEmail" -> user.removeEmail(call.argument<String>("value") ?: "")
       "addSms" -> user.addSms(call.argument<String>("value") ?: "")
@@ -168,13 +167,14 @@ class SuprsendFlutterSdkPlugin : FlutterPlugin, MethodCallHandler {
       "removeWhatsapp" -> user.removeWhatsapp(call.argument<String>("value") ?: "")
       "setPreferredLanguage" -> user.setPreferredLanguage(call.argument<String>("value") ?: "")
       "setTimezone" -> user.setTimezone(call.argument<String>("value") ?: "")
-      "setAndroidFcmPush" -> user.setAndroidFcmPush(call.argument<String>("token") ?: "")
+      "setAndroidFcmPush" -> user.addFcmPush(call.argument<String>("token") ?: "")
+      "removeAndroidFcmPush" -> user.removeFcmPush(call.argument<String>("token") ?: "")
       else -> null
     }
   }
 
-  // Bridges the native RefreshTokenCallback to Dart; blocks the worker thread (never the main thread) until Dart returns.
-  private fun refreshTokenCallback() = object : RefreshTokenCallback {
+  // Bridges the native RefreshUserTokenCallback to Dart; blocks the worker thread (never the main thread) until Dart returns.
+  private fun refreshTokenCallback() = object : RefreshUserTokenCallback {
     override fun getToken(distinctId: String): String {
       val latch = CountDownLatch(1)
       val holder = arrayOfNulls<String>(1)
