@@ -42,6 +42,8 @@ class AppRouter {
           path: profile,
           builder: (context, state) => ProfileScreen(
             distinctId: auth.distinctId ?? '',
+            tenantId: auth.tenantId,
+            onChangeTenant: auth.changeTenant,
             onLogout: auth.logout,
           ),
         ),

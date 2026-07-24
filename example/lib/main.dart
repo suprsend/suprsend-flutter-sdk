@@ -15,6 +15,7 @@ Future<void> main() async {
 
   SuprSend(
     dotenv.env['SUPRSEND_PUBLIC_KEY'] ?? '',
+    host: dotenv.env['SUPRSEND_HOST'],
     appName: 'SuprSend Example',
     appVersion: '3.0.0',
   );
