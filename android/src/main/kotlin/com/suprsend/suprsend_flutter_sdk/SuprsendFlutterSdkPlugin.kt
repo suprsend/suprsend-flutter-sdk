@@ -51,6 +51,7 @@ class SuprsendFlutterSdkPlugin : FlutterPlugin, MethodCallHandler {
   override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
     when (call.method) {
       "configure" -> configure(call, result)
+      "changeTenant" -> changeTenant(call, result)
       "enableLogging" -> enableLogging(result)
       "isIdentified" -> isIdentified(call, result)
       "getDistinctId" -> getDistinctId(result)
@@ -101,6 +102,12 @@ class SuprsendFlutterSdkPlugin : FlutterPlugin, MethodCallHandler {
     result.success(null)
   }
 
+  private fun changeTenant(call: MethodCall, result: Result) {
+    // Static companion call — switches the active tenant without re-identifying.
+    SuprSend.changeTenant(call.argument<String>("tenantId"))
+    result.success(null)
+  }
+
   private fun enableLogging(result: Result) {
     runCatching { SuprSend.getInstance().setLogLevel(LogLevel.VERBOSE) }
     result.success(null)
@@ -141,6 +148,7 @@ class SuprsendFlutterSdkPlugin : FlutterPlugin, MethodCallHandler {
         ss.identify(
           distinctId = call.argument<String>("distinctId") ?: "",
           userToken = userToken,
+          tenantId = call.argument<String>("tenantId"),
           refreshUserToken = refreshCallback,
         )
       }
