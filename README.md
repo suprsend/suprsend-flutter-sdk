@@ -59,6 +59,7 @@ Authenticate user so that all the actions performed after authenticating will be
 await SuprSend.identify(
   'user-distinct-id',
   userToken: jwt, // only needed in production environments for security
+  tenantId: 'tenant-id', // only needed in multi-tenant workspaces
   refreshUserToken: (oldUserToken, tokenPayload) async {
     return await myBackend.fetchSuprSendToken();
   },
@@ -69,6 +70,7 @@ await SuprSend.identify(
 | :--------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | distinctId\*     | Unique identifier to identify a user across platform.                                                                                                                                                                                     |
 | userToken        | Mandatory when enhanced security mode is on. This is ES256 JWT token generated in your server-side. Refer [docs](https://docs.suprsend.com/docs/client-authentication#enhanced-security-mode-with-signed-user-token) to create userToken. |
+| tenantId         | Needed only when your workspace has multiple tenants/brands. Scopes the identified users activity to that tenant. Its value must match `scope.tenant_id` in the `userToken` payload, else it raises a scoping error.                      |
 | refreshUserToken | This function is called by SDK internally to get new userToken when existing user token is expired. The returned string is used as the new userToken.                                                                                     |
 
 ### Step 3: Reset User
@@ -77,6 +79,14 @@ This will remove user data from SuprSend instance similar to logout action.
 
 ```dart
 await SuprSend.reset();
+```
+
+## Change active tenant
+
+Use the below method to switch the active tenant of identified user.
+
+```dart
+await SuprSend.changeTenant('tenant-id');
 ```
 
 ## Push Notifications
