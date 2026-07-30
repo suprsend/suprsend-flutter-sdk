@@ -33,18 +33,17 @@ target 'Runner' do
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 
-  # Source SuprSendSwift from the local sibling checkout during development.
-  pod 'SuprSendSwift', :path => '../../../suprsend-swift-sdk'
-
   target 'RunnerTests' do
     inherit! :search_paths
   end
 end
 
-# Notification Service Extension: links SuprSendSwift for rich (image/media) notifications.
+# Notification Service Extension: links SuprSendSwift for rich (image/media)
+# notifications. This target doesn't depend on the plugin, so it names the pod
+# directly — unversioned, so it follows whatever the plugin's podspec pins.
 target 'NotificationService' do
   use_frameworks!
-  pod 'SuprSendSwift', :path => '../../../suprsend-swift-sdk'
+  pod 'SuprSendSwift'
 end
 
 post_install do |installer|

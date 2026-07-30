@@ -11,8 +11,8 @@ PODS:
     - FlutterMacOS
   - suprsend_flutter_sdk (3.0.0):
     - Flutter
-    - SuprSendSwift (~> 1.2)
-  - SuprSendSwift (1.2.0)
+    - SuprSendSwift (~> 2.0)
+  - SuprSendSwift (2.0.0)
 
 DEPENDENCIES:
   - app_links (from `.symlinks/plugins/app_links/ios`)
@@ -21,7 +21,11 @@ DEPENDENCIES:
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
   - suprsend_flutter_sdk (from `.symlinks/plugins/suprsend_flutter_sdk/ios`)
-  - SuprSendSwift (from `../../../suprsend-swift-sdk`)
+  - SuprSendSwift
+
+SPEC REPOS:
+  trunk:
+    - SuprSendSwift
 
 EXTERNAL SOURCES:
   app_links:
@@ -36,8 +40,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
   suprsend_flutter_sdk:
     :path: ".symlinks/plugins/suprsend_flutter_sdk/ios"
-  SuprSendSwift:
-    :path: "../../../suprsend-swift-sdk"
 
 SPEC CHECKSUMS:
   app_links: 76b66b60cc809390ca1ad69bfd66b998d2387ac7
@@ -45,9 +47,9 @@ SPEC CHECKSUMS:
   integration_test: 2d03ab552da9a1f408709a6acf3d7ca4cb3cb307
   permission_handler_apple: 92d754bbaa7361d436db2d6c3c1c2a0fdcec462e
   shared_preferences_foundation: 9e1978ff2562383bd5676f64ec4e9aa8fa06a6f7
-  suprsend_flutter_sdk: b9ff983d13f87ab9e850d3a9d789388668c3f2a3
-  SuprSendSwift: 8b53767a8196ea8df50816e7d3750c9e92068923
+  suprsend_flutter_sdk: 908662d89f4b6aabfca0b467c03978cd930a3eeb
+  SuprSendSwift: 96a1378f5c93fff4de3727557a4851bc4083bea1
 
-PODFILE CHECKSUM: a2e132a93a58e72c59e31ff6aeece23add0584ec
+PODFILE CHECKSUM: b8be8685232a7d493e2347bcd36f9c48ff142bf8
 
 COCOAPODS: 1.16.2

@@ -98,16 +98,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: CircleAvatar(
                   radius: 44,
                   backgroundColor: theme.colorScheme.primary,
-                  child: const Icon(Icons.person,
-                      size: 48, color: Colors.white),
+                  child:
+                      const Icon(Icons.person, size: 48, color: Colors.white),
                 ),
               ),
               const SizedBox(height: 24),
               Text(
                 'DISTINCT ID',
                 textAlign: TextAlign.center,
-                style:
-                    theme.textTheme.labelSmall?.copyWith(letterSpacing: 0.5),
+                style: theme.textTheme.labelSmall?.copyWith(letterSpacing: 0.5),
               ),
               const SizedBox(height: 6),
               Text(
@@ -119,8 +118,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(height: 24),
               Text(
                 'TENANT ID',
-                style:
-                    theme.textTheme.labelSmall?.copyWith(letterSpacing: 0.5),
+                style: theme.textTheme.labelSmall?.copyWith(letterSpacing: 0.5),
               ),
               const SizedBox(height: 6),
               Row(

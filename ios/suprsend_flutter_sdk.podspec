@@ -16,7 +16,7 @@ tracking, user channels and push notifications.
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
-  s.dependency 'SuprSendSwift', '~> 1.2'
+  s.dependency 'SuprSendSwift', '~> 2.0'
   s.platform = :ios, '15.0'
 
   # Flutter.framework does not contain a i386 slice.

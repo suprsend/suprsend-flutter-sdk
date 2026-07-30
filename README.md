@@ -78,8 +78,8 @@ await SuprSend.reset();
 
 Push is configured natively on each platform. Follow the platform-specific guide:
 
-- [iOS Push Setup (APNs)](docs/IOS_PUSH_SETUP.md)
-- [Android Push Setup (FCM)](docs/ANDROID_PUSH_SETUP.md)
+- [iOS Push Setup (APNs)](doc/IOS_PUSH_SETUP.md)
+- [Android Push Setup (FCM)](doc/ANDROID_PUSH_SETUP.md)
 
 ## Logging
 
