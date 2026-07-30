@@ -43,6 +43,7 @@ class SuprSend {
   static Future<SSResponse> identify(
     String distinctId, {
     String? userToken,
+    String? tenantId,
     SSRefreshUserTokenCallback? refreshUserToken,
   }) async {
     _refreshUserToken = refreshUserToken;
@@ -50,6 +51,7 @@ class SuprSend {
     final result = await _channel.invokeMethod<dynamic>('identify', {
       'distinctId': distinctId,
       'userToken': userToken,
+      'tenantId': tenantId,
       'hasRefreshUserToken': refreshUserToken != null,
     });
     return SSResponse.fromMap(result as Map<dynamic, dynamic>?);
@@ -115,6 +117,10 @@ class SuprSend {
       'unsubscribePush': unsubscribePush,
     });
     return SSResponse.fromMap(result as Map<dynamic, dynamic>?);
+  }
+
+  static Future<void> changeTenant(String tenantId) {
+    return _channel.invokeMethod<void>('changeTenant', {'tenantId': tenantId});
   }
 
   static Future<void> enableLogging() {

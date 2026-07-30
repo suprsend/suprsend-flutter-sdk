@@ -12,11 +12,18 @@ class AuthTokenService {
   bool get isConfigured => baseUrl.isNotEmpty;
 
   // Returns the user token for distinctId, or null if it can't be fetched.
-  Future<String?> fetchUserToken(String distinctId) async {
+  // When tenantId is set it's forwarded to the backend as a query param.
+  Future<String?> fetchUserToken(String distinctId, {String? tenantId}) async {
     if (!isConfigured) return null;
-    final uri = Uri.parse(
+    var uri = Uri.parse(
       '$baseUrl/authentication-token/${Uri.encodeComponent(distinctId)}',
     );
+    if (tenantId != null && tenantId.isNotEmpty) {
+      uri = uri.replace(queryParameters: {
+        ...uri.queryParameters,
+        'tenant_id': tenantId,
+      });
+    }
     try {
       final response = await http.get(uri).timeout(const Duration(seconds: 15));
       if (response.statusCode != 200) return null;

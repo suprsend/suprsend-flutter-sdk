@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key, required this.onSubmit});
 
-  final Future<void> Function(String distinctId, {bool useUserToken}) onSubmit;
+  final Future<void> Function(
+    String distinctId, {
+    bool useUserToken,
+    String? tenantId,
+  }) onSubmit;
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -11,21 +15,28 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _controller = TextEditingController();
+  final TextEditingController _tenantController = TextEditingController();
   bool _submitting = false;
   bool _useUserToken = false;
 
   @override
   void dispose() {
     _controller.dispose();
+    _tenantController.dispose();
     super.dispose();
   }
 
   Future<void> _submit() async {
     final id = _controller.text.trim();
     if (id.isEmpty || _submitting) return;
+    final tenant = _tenantController.text.trim();
     setState(() => _submitting = true);
     try {
-      await widget.onSubmit(id, useUserToken: _useUserToken);
+      await widget.onSubmit(
+        id,
+        useUserToken: _useUserToken,
+        tenantId: tenant.isEmpty ? null : tenant,
+      );
     } finally {
       if (mounted) setState(() => _submitting = false);
     }
@@ -77,6 +88,25 @@ class _LoginScreenState extends State<LoginScreen> {
                     onSubmitted: (_) => _submit(),
                     decoration: const InputDecoration(
                       hintText: 'e.g. user@example.com',
+                      border: OutlineInputBorder(),
+                      isDense: true,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'TENANT ID (OPTIONAL)',
+                    style: theme.textTheme.labelSmall
+                        ?.copyWith(letterSpacing: 0.5),
+                  ),
+                  const SizedBox(height: 6),
+                  TextField(
+                    controller: _tenantController,
+                    autocorrect: false,
+                    enableSuggestions: false,
+                    textInputAction: TextInputAction.go,
+                    onSubmitted: (_) => _submit(),
+                    decoration: const InputDecoration(
+                      hintText: 'e.g. acme',
                       border: OutlineInputBorder(),
                       isDense: true,
                     ),

@@ -41,6 +41,7 @@ public class SuprsendFlutterSdkPlugin: NSObject, FlutterPlugin {
     case "identify":
       let distinctID = args["distinctId"] as? String ?? ""
       let userToken = args["userToken"] as? String
+      let tenantId = args["tenantId"] as? String
       let hasRefresh = args["hasRefreshUserToken"] as? Bool ?? false
       let options: AuthenticateOptions? = hasRefresh
         ? AuthenticateOptions(refreshUserToken: { [weak self] oldUserToken, _ in
@@ -48,9 +49,14 @@ public class SuprsendFlutterSdkPlugin: NSObject, FlutterPlugin {
           })
         : nil
       Task {
-        let r = await client.identify(distinctID: distinctID, userToken: userToken, options: options)
+        let r = await client.identify(distinctID: distinctID, userToken: userToken, tenantId: tenantId, options: options)
         self.reply(result, r)
       }
+
+    case "changeTenant":
+      let tenantId = args["tenantId"] as? String ?? ""
+      client.changeTenant(tenantId: tenantId)
+      result(nil)
 
     case "isIdentified":
       let check = args["checkUserToken"] as? Bool ?? false

@@ -15,6 +15,7 @@ Future<void> main() async {
 
   SuprSend(
     dotenv.env['SUPRSEND_PUBLIC_KEY'] ?? '',
+    host: dotenv.env['SUPRSEND_HOST'],
     appName: 'SuprSend Example',
     appVersion: '3.0.0',
   );
@@ -31,8 +32,8 @@ class ExampleApp extends StatefulWidget {
 }
 
 class _ExampleAppState extends State<ExampleApp> {
-  late final AuthController _auth =
-      AuthController(AuthTokenService(dotenv.env['SUPRSEND_AUTH_TOKEN_URL'] ?? ''));
+  late final AuthController _auth = AuthController(
+      AuthTokenService(dotenv.env['SUPRSEND_AUTH_TOKEN_URL'] ?? ''));
   late final GoRouter _router = AppRouter.create(_auth);
   late final DeepLinkService _deepLinkService = DeepLinkService(_router);
 
