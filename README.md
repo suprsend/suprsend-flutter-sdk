@@ -5,7 +5,7 @@ This SDK is used to integrate SuprSend features like Mobile Push, Preferences an
 > 📘 This is v3 of suprsend_flutter_sdk
 >
 > - Documentation for v2 of this sdk is available [here](https://github.com/suprsend/suprsend-flutter-sdk-old/blob/main/README.md)
-> - Please refer migration guide [here](https://docs.suprsend.com/docs/flutter-migration-from-v3).
+> - Please refer migration guide [here](doc/MIGRATION_FROM_V2.md).
 
 ## Installation
 
