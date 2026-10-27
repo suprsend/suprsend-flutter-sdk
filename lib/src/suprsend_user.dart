@@ -14,23 +14,76 @@ class SuprSendUser {
     return SSResponse.fromMap(result as Map<dynamic, dynamic>?);
   }
 
-  Future<SSResponse> set(Map<String, dynamic> properties) =>
-      _invoke('set', {'properties': properties});
+  // Accepts either a `Map<String, V>` of properties, or a `String` key with
+  // its value passed separately.
+  static Map<String, V> _toProperties<V>(
+      String method, Object keyOrProperties, V? value) {
+    if (keyOrProperties is Map) {
+      if (value != null) {
+        throw ArgumentError(
+            'value must not be passed when $method is called with a map');
+      }
+      // Check entries rather than the map's static type, so e.g. a
+      // Map<String, dynamic> holding only numbers is accepted by increment.
+      return keyOrProperties.map((k, v) {
+        if (k is! String || v is! V) {
+          throw ArgumentError.value(keyOrProperties, 'keyOrProperties',
+              'must be a Map<String, $V>');
+        }
+        return MapEntry(k, v);
+      });
+    }
+    if (keyOrProperties is String) {
+      if (value == null) {
+        throw ArgumentError.notNull('value');
+      }
+      return {keyOrProperties: value};
+    }
+    throw ArgumentError.value(keyOrProperties, 'keyOrProperties',
+        'must be a String key or a Map<String, $V>');
+  }
 
-  Future<SSResponse> setOnce(Map<String, dynamic> properties) =>
-      _invoke('setOnce', {'properties': properties});
+  /// `set('name', 'Jane')` or `set({'name': 'Jane', 'age': 30})`.
+  Future<SSResponse> set(Object keyOrProperties, [dynamic value]) =>
+      _invoke('set', {
+        'properties': _toProperties<dynamic>('set', keyOrProperties, value)
+      });
 
-  Future<SSResponse> increment(Map<String, num> properties) =>
-      _invoke('increment', {'properties': properties});
+  /// `setOnce('signup_date', '2026-10-27')` or `setOnce({...})`.
+  Future<SSResponse> setOnce(Object keyOrProperties, [dynamic value]) =>
+      _invoke('setOnce', {
+        'properties': _toProperties<dynamic>('setOnce', keyOrProperties, value)
+      });
 
-  Future<SSResponse> append(Map<String, dynamic> properties) =>
-      _invoke('append', {'properties': properties});
+  /// `increment('login_count', 1)` or `increment({'login_count': 1})`.
+  Future<SSResponse> increment(Object keyOrProperties, [num? value]) =>
+      _invoke('increment', {
+        'properties': _toProperties<num>('increment', keyOrProperties, value)
+      });
 
-  Future<SSResponse> remove(Map<String, dynamic> properties) =>
-      _invoke('remove', {'properties': properties});
+  /// `append('tags', 'flutter')` or `append({'tags': 'flutter'})`.
+  Future<SSResponse> append(Object keyOrProperties, [dynamic value]) =>
+      _invoke('append', {
+        'properties': _toProperties<dynamic>('append', keyOrProperties, value)
+      });
 
-  Future<SSResponse> unset(List<String> keys) =>
-      _invoke('unset', {'keys': keys});
+  /// `remove('tags', 'flutter')` or `remove({'tags': 'flutter'})`.
+  Future<SSResponse> remove(Object keyOrProperties, [dynamic value]) =>
+      _invoke('remove', {
+        'properties': _toProperties<dynamic>('remove', keyOrProperties, value)
+      });
+
+  /// `unset('plan')` or `unset(['plan', 'age'])`.
+  Future<SSResponse> unset(Object keyOrKeys) {
+    if (keyOrKeys is String) {
+      return _invoke('unset', {'keys': [keyOrKeys]});
+    }
+    if (keyOrKeys is List && keyOrKeys.every((k) => k is String)) {
+      return _invoke('unset', {'keys': keyOrKeys.cast<String>()});
+    }
+    throw ArgumentError.value(
+        keyOrKeys, 'keyOrKeys', 'must be a String key or a List<String>');
+  }
 
   Future<SSResponse> addEmail(String email) =>
       _invoke('addEmail', {'value': email});

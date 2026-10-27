@@ -19,6 +19,10 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   static const String _sampleEmail = 'user@example.com';
+  // Must pass libphonenumber validation natively (555 area codes are rejected).
+  static const String _sampleMobile = '+918989898989';
+  // Dummy value for testing the bridge; real tokens are registered natively.
+  static const String _samplePushToken = 'dummy_push_token';
 
   @override
   void initState() {
@@ -48,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _run(String label, Future<SSResponse> Function() action) async {
     try {
       final r = await action();
-      _toast(r.isSuccess ? '$label ok' : '$label failed');
+      _toast(r.isSuccess ? '$label ok' : '$label failed: ${r.errorMessage}');
     } catch (e) {
       _toast('$label failed: $e');
     }
@@ -101,19 +105,110 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
               const SizedBox(height: 28),
-              _action('Add email', () => SuprSend.user.addEmail(_sampleEmail)),
-              _action('Remove email',
-                  () => SuprSend.user.removeEmail(_sampleEmail)),
-              _action(
-                'Track event',
-                () => SuprSend.track(
-                  'home_button_clicked',
-                  {'source': 'home_screen'},
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      _section('CHANNELS'),
+                      _action('Add email',
+                          () => SuprSend.user.addEmail(_sampleEmail)),
+                      _action('Remove email',
+                          () => SuprSend.user.removeEmail(_sampleEmail)),
+                      _action(
+                          'Add SMS', () => SuprSend.user.addSMS(_sampleMobile)),
+                      _action('Remove SMS',
+                          () => SuprSend.user.removeSMS(_sampleMobile)),
+                      _action('Add WhatsApp',
+                          () => SuprSend.user.addWhatsapp(_sampleMobile)),
+                      _action('Remove WhatsApp',
+                          () => SuprSend.user.removeWhatsapp(_sampleMobile)),
+                      _action('Add push',
+                          () => SuprSend.user.addPush(_samplePushToken)),
+                      _action('Remove push',
+                          () => SuprSend.user.removePush(_samplePushToken)),
+                      _section('PROPERTIES (MAP)'),
+                      _action(
+                        'Set',
+                        () => SuprSend.user
+                            .set({'name': 'Test User', 'plan': 'pro'}),
+                      ),
+                      _action(
+                        'Set once',
+                        () => SuprSend.user.setOnce(
+                            {'first_seen': DateTime.now().toIso8601String()}),
+                      ),
+                      _action('Increment',
+                          () => SuprSend.user.increment({'login_count': 1})),
+                      _action('Append',
+                          () => SuprSend.user.append({'tags': 'flutter'})),
+                      _action('Remove',
+                          () => SuprSend.user.remove({'tags': 'flutter'})),
+                      _action('Unset', () => SuprSend.user.unset(['plan'])),
+                      _section('PROPERTIES (SINGLE KEY)'),
+                      _action('Set (string)',
+                          () => SuprSend.user.set('city', 'Bengaluru')),
+                      _action('Set (bool)',
+                          () => SuprSend.user.set('is_beta', true)),
+                      _action(
+                        'Set (map value)',
+                        () => SuprSend.user
+                            .set('address', {'zip': '560001', 'country': 'IN'}),
+                      ),
+                      _action(
+                        'Set once (string)',
+                        () => SuprSend.user
+                            .setOnce('referrer', 'flutter_example'),
+                      ),
+                      _action('Increment (int)',
+                          () => SuprSend.user.increment('app_opens', 1)),
+                      _action('Increment (double)',
+                          () => SuprSend.user.increment('wallet_balance', 2.5)),
+                      _action('Decrement (int)',
+                          () => SuprSend.user.increment('app_opens', -1)),
+                      _action('Append (string)',
+                          () => SuprSend.user.append('interests', 'music')),
+                      _action('Append (number)',
+                          () => SuprSend.user.append('lucky_numbers', 7)),
+                      _action('Remove (string)',
+                          () => SuprSend.user.remove('interests', 'music')),
+                      _action('Remove (number)',
+                          () => SuprSend.user.remove('lucky_numbers', 7)),
+                      _action('Unset (single key)',
+                          () => SuprSend.user.unset('city')),
+                      _section('PREFERENCES'),
+                      _action('Set preferred language',
+                          () => SuprSend.user.setPreferredLanguage('en')),
+                      _action('Set timezone',
+                          () => SuprSend.user.setTimezone('Asia/Kolkata')),
+                      _section('EVENTS'),
+                      _action(
+                        'Track event',
+                        () => SuprSend.track(
+                          'home_button_clicked',
+                          {'source': 'home_screen'},
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _section(String title) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8, bottom: 8),
+      child: Text(
+        title,
+        style: Theme.of(context)
+            .textTheme
+            .labelSmall
+            ?.copyWith(letterSpacing: 0.5),
       ),
     );
   }
